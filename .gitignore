@@ -1,0 +1,7 @@
+dataset/*
+CLAUDE.md
+.venv/
+tools/
+labs/*/ctfd/
+__pycache__/
+*.pyc
