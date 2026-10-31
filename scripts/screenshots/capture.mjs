@@ -161,7 +161,7 @@ for (const shot of shots) {
     if (shot.query) {
       clip = await captureQuery(page, shot);
     } else if (uiSteps[shot.id]) {
-      await page.setViewportSize(WIDE);
+      await page.setViewportSize(shot.opts.narrow ? NARROW : WIDE);
       clip = await uiSteps[shot.id](env, shot);
       await assertClean(page, shot.id);
     } else {

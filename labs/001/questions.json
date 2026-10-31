@@ -17,7 +17,7 @@
     {
       "id": "001",
       "stage": "triage",
-      "title": "Patient zero",
+      "title": "First host",
       "difficulty": "easy",
       "points": 50,
       "prompt": "Which workstation was compromised first?",
@@ -26,7 +26,7 @@
         "canonical": "WS02",
         "accepted": ["WS02", "WS02.meridian.internal"]
       },
-      "hint": "Establish the earliest abnormal activity before following later spread.",
+      "hint": "Which host first started a shell straight from Explorer?",
       "evidence": {
         "sources": ["Sysmon process creation", "Sysmon network connection"],
         "fields": ["computer_name", "image", "parent_image", "dst_ip"]
@@ -35,16 +35,16 @@
     {
       "id": "002",
       "stage": "triage",
-      "title": "First affected identity",
+      "title": "First user",
       "difficulty": "easy",
       "points": 50,
-      "prompt": "Which domain user owned the first suspicious process tree?",
+      "prompt": "Which domain user ran the first suspicious process tree?",
       "answer": {
         "type": "string",
         "canonical": "MERIDIAN\\jen.walker",
         "accepted": ["MERIDIAN\\jen.walker", "meridian\\jen.walker", "jen.walker"]
       },
-      "hint": "Attribute the earliest suspicious process tree, not the later remote logons.",
+      "hint": "Check the user on the earliest suspicious process, not later logons.",
       "evidence": {
         "sources": ["Sysmon process creation"],
         "fields": ["computer_name", "user", "image", "process_guid"]
@@ -53,16 +53,16 @@
     {
       "id": "003",
       "stage": "initial-access",
-      "title": "Copied trouble",
+      "title": "Initial access",
       "difficulty": "easy",
       "points": 75,
-      "prompt": "What social-engineering technique caused the victim to paste and execute the initial command?",
+      "prompt": "What social engineering technique got the user to paste and run the first command?",
       "answer": {
         "type": "string",
         "canonical": "ClickFix",
         "accepted": ["ClickFix", "Click Fix", "malicious copy and paste", "T1204.004"]
       },
-      "hint": "The initial execution leaves evidence in more than one telemetry source.",
+      "hint": "Look at the Run dialog history in the registry.",
       "evidence": {
         "sources": ["Sysmon registry value set", "Sysmon process creation"],
         "fields": ["target_object", "details", "image", "parent_image"]
@@ -71,16 +71,16 @@
     {
       "id": "004",
       "stage": "initial-access",
-      "title": "The download interpreter",
+      "title": "Download",
       "difficulty": "medium",
       "points": 75,
-      "prompt": "Which command interpreter did Explorer launch to retrieve and unpack the initial bundle?",
+      "prompt": "Which command interpreter did Explorer start to download and unpack the first bundle?",
       "answer": {
         "type": "string",
         "canonical": "powershell.exe",
         "accepted": ["powershell.exe", "PowerShell"]
       },
-      "hint": "Correlate the user's execution history with the earliest suspicious process tree.",
+      "hint": "Match the Run dialog history to processes started by explorer.exe.",
       "evidence": {
         "sources": ["Sysmon process creation", "Sysmon registry value set"],
         "fields": ["image", "parent_image", "commandline", "details"]
@@ -89,16 +89,16 @@
     {
       "id": "005",
       "stage": "loader-analysis",
-      "title": "Loader on disk",
+      "title": "Loader file name",
       "difficulty": "medium",
       "points": 75,
-      "prompt": "What exact filename did the signed portable interpreter use on disk?",
+      "prompt": "What file name did the loader run under on disk?",
       "answer": {
         "type": "string",
         "canonical": "QuickConnectSupport.exe",
         "accepted": ["QuickConnectSupport.exe"]
       },
-      "hint": "Follow the extraction and execution lineage carefully.",
+      "hint": "What did tar.exe write?",
       "evidence": {
         "sources": ["Sysmon process creation", "Sysmon file create"],
         "fields": ["image", "parent_image", "target_file", "trusted"]
@@ -110,13 +110,13 @@
       "title": "Loader identity",
       "difficulty": "medium",
       "points": 75,
-      "prompt": "What original filename was embedded in that signed executable?",
+      "prompt": "What original file name is embedded in that executable?",
       "answer": {
         "type": "string",
         "canonical": "pythonw.exe",
         "accepted": ["pythonw.exe", "pythonw"]
       },
-      "hint": "The displayed filename is not the binary's original identity.",
+      "hint": "Sysmon records the original file name from the binary's version info.",
       "evidence": {
         "sources": ["Sysmon process creation"],
         "fields": ["image", "original_file_name", "trusted", "commandline"]
@@ -125,16 +125,16 @@
     {
       "id": "007",
       "stage": "loader-analysis",
-      "title": "Path configuration pivot",
+      "title": "Path configuration",
       "difficulty": "hard",
       "points": 100,
-      "prompt": "What exact Python path-configuration filename was placed beside the portable interpreter?",
+      "prompt": "What Python path configuration file was placed next to the loader?",
       "answer": {
         "type": "string",
         "canonical": "python312._pth",
         "accepted": ["python312._pth"]
       },
-      "hint": "Review all files created in the runtime directory immediately before execution.",
+      "hint": "tar keeps the archive's file times, so check Sysmon event 2 as well as event 11.",
       "evidence": {
         "sources": ["Sysmon file creation time change"],
         "fields": ["event_id", "image", "target_file", "user"]
@@ -143,16 +143,16 @@
     {
       "id": "008",
       "stage": "loader-analysis",
-      "title": "Sidecar import",
+      "title": "Startup code",
       "difficulty": "hard",
       "points": 100,
-      "prompt": "What exact sidecar archive filename supplied the loader's startup code?",
+      "prompt": "Which archive file supplied the loader's startup code?",
       "answer": {
         "type": "string",
         "canonical": "DocumentResources.dat",
         "accepted": ["DocumentResources.dat"]
       },
-      "hint": "Not every archive advertises its format through its extension.",
+      "hint": "Not every archive has an archive extension.",
       "evidence": {
         "sources": ["Sysmon file creation time change"],
         "fields": ["event_id", "image", "target_file"]
@@ -164,13 +164,13 @@
       "title": "First payload",
       "difficulty": "medium",
       "points": 75,
-      "prompt": "What exact executable did the signed loader start to establish the first foothold?",
+      "prompt": "What executable did the loader start first?",
       "answer": {
         "type": "string",
         "canonical": "QuickConnect.Service.exe",
         "accepted": ["QuickConnect.Service.exe"]
       },
-      "hint": "Follow the disguised interpreter's direct child.",
+      "hint": "Look at the loader's direct children.",
       "evidence": {
         "sources": ["Sysmon process creation"],
         "fields": ["image", "parent_image", "process_guid", "parent_process_guid"]
@@ -179,10 +179,10 @@
     {
       "id": "010",
       "stage": "discovery",
-      "title": "Direct discovery",
+      "title": "Discovery",
       "difficulty": "medium",
       "points": 75,
-      "prompt": "Which two native executables were repeatedly launched directly to collect identity and network configuration?",
+      "prompt": "Which two built-in Windows programs were run over and over to collect user and network details?",
       "answer": {
         "type": "set",
         "canonical": ["whoami.exe", "ipconfig.exe"],
@@ -191,7 +191,7 @@
           "ipconfig.exe": ["ipconfig"]
         }
       },
-      "hint": "Compare recurring child-process patterns across the affected hosts.",
+      "hint": "Ignore anything launched through cmd.exe.",
       "evidence": {
         "sources": ["Sysmon process creation"],
         "fields": ["computer_name", "image", "parent_image", "commandline"]
@@ -200,10 +200,10 @@
     {
       "id": "011",
       "stage": "discovery",
-      "title": "System inventory chain",
+      "title": "System inventory",
       "difficulty": "hard",
       "points": 100,
-      "prompt": "Which parent-child executable pair was used to collect operating-system inventory? Submit the pair in execution order.",
+      "prompt": "Which parent and child pair collected operating system details? Submit them in order, parent first.",
       "answer": {
         "type": "ordered_list",
         "canonical": ["cmd.exe", "systeminfo.exe"],
@@ -211,9 +211,9 @@
           "cmd.exe": ["cmd"],
           "systeminfo.exe": ["systeminfo"]
         },
-        "accepted_separators": [" -> ", ">", ",", "|"]
+        "accepted_separators": [" -> ", ">", ",", "|", " → ", "→"]
       },
-      "hint": "One member of the pair is only a wrapper for the other.",
+      "hint": "One of the two only wraps the other.",
       "evidence": {
         "sources": ["Sysmon process creation"],
         "fields": ["image", "parent_image", "commandline", "process_guid", "parent_process_guid"]
@@ -222,16 +222,16 @@
     {
       "id": "012",
       "stage": "remote-access",
-      "title": "Support tool unmasked",
+      "title": "Remote support tool",
       "difficulty": "medium",
       "points": 75,
-      "prompt": "What remote-support product was deployed under the same support-themed executable name?",
+      "prompt": "Which remote support tool was deployed under the same support-themed file name?",
       "answer": {
         "type": "string",
         "canonical": "RustDesk",
         "accepted": ["RustDesk", "rustdesk.exe"]
       },
-      "hint": "A reused display name hides two different binary identities.",
+      "hint": "Two different binaries share one file name. Compare their original file names.",
       "evidence": {
         "sources": ["Sysmon process creation", "Sysmon network connection"],
         "fields": ["image", "original_file_name", "commandline", "dst_port"]
@@ -240,10 +240,10 @@
     {
       "id": "013",
       "stage": "remote-access",
-      "title": "Hands on keyboard",
+      "title": "Typed command",
       "difficulty": "hard",
       "points": 100,
-      "prompt": "What exact command line was entered through the visible remote-support session to open the diagnostic shell?",
+      "prompt": "What command line did the attacker type to open a shell?",
       "answer": {
         "type": "string",
         "canonical": "cmd.exe /k whoami.exe & hostname.exe & ipconfig.exe /all",
@@ -252,7 +252,7 @@
           "cmd /k whoami & hostname & ipconfig /all"
         ]
       },
-      "hint": "Separate interactive operator activity from automated discovery.",
+      "hint": "Look for a command a person typed, not the automated discovery.",
       "evidence": {
         "sources": ["Sysmon registry value set", "Sysmon process creation"],
         "fields": ["target_object", "details", "image", "parent_image", "commandline"]
@@ -261,16 +261,16 @@
     {
       "id": "014",
       "stage": "persistence",
-      "title": "A trusted process turns",
+      "title": "Trusted process",
       "difficulty": "hard",
       "points": 100,
-      "prompt": "Which legitimate executable loaded user-profile DLLs, spawned discovery processes, and made an unusual outbound connection?",
+      "prompt": "Which legitimate program loaded a DLL from the user profile, started discovery commands and made an outbound connection?",
       "answer": {
         "type": "string",
         "canonical": "C:\\Program Files\\Greenshot\\Greenshot.exe",
         "accepted": ["C:\\Program Files\\Greenshot\\Greenshot.exe", "Greenshot.exe", "Greenshot"]
       },
-      "hint": "Correlate module loads, child processes, and network behavior.",
+      "hint": "Look at image loads from user-writable folders.",
       "evidence": {
         "sources": ["Sysmon image load", "Sysmon process creation", "Sysmon network connection"],
         "fields": ["image", "image_loaded", "parent_image", "dst_ip", "trusted"]
@@ -279,10 +279,10 @@
     {
       "id": "015",
       "stage": "persistence",
-      "title": "Logon foothold",
+      "title": "Persistence",
       "difficulty": "medium",
       "points": 100,
-      "prompt": "What user-level registry value was created for persistence? Submit the key path including its value name.",
+      "prompt": "What registry value was added for persistence? Submit the key path with the value name, starting with HKCU.",
       "answer": {
         "type": "string",
         "canonical": "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\\Greenshot",
@@ -293,7 +293,7 @@
           "HKEY_USERS\\S-1-5-21-3806402762-256428287-4157084442-1110\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\\Greenshot"
         ]
       },
-      "hint": "Endpoint registry telemetry names user hives by SID rather than HKCU.",
+      "hint": "Sysmon names user hives by SID, not HKCU.",
       "evidence": {
         "sources": ["Sysmon registry value set"],
         "fields": ["target_object", "details", "image"]
@@ -302,15 +302,15 @@
     {
       "id": "016",
       "stage": "persistence",
-      "title": "User-profile plugins",
+      "title": "Plugin DLLs",
       "difficulty": "hard",
       "points": 100,
-      "prompt": "Which two exact DLL filenames were staged in the user-writable plugin directory?",
+      "prompt": "Which two DLLs were staged in the user-writable plugin folder?",
       "answer": {
         "type": "set",
         "canonical": ["Greenshot.Plugin.QuickConnect.dll", "QuickConnect.ImageCache.dll"]
       },
-      "hint": "Focus on new user-profile modules associated with the persistent process.",
+      "hint": "Look at every file written to the folder the DLL loaded from.",
       "evidence": {
         "sources": ["Sysmon file create", "Sysmon image load"],
         "fields": ["target_file", "image", "image_loaded", "hash"]
@@ -319,17 +319,17 @@
     {
       "id": "017",
       "stage": "credential-access",
-      "title": "The sprayed secret",
+      "title": "Sprayed password",
       "difficulty": "medium",
       "points": 75,
-      "prompt": "What organization-themed password was tested against several domain identities?",
+      "prompt": "What password was tried against several domain accounts? (case sensitive)",
       "answer": {
         "type": "string",
         "canonical": "Meridian2026!",
         "case_sensitive": true,
         "accepted": ["Meridian2026!"]
       },
-      "hint": "Inspect the credential-use activity that precedes lateral access.",
+      "hint": "Look for command lines that pass a password.",
       "evidence": {
         "sources": ["Sysmon process creation"],
         "fields": ["computer_name", "image", "commandline", "user"]
@@ -338,10 +338,10 @@
     {
       "id": "018",
       "stage": "credential-access",
-      "title": "Rejected user accounts",
+      "title": "Rejected users",
       "difficulty": "medium",
       "points": 75,
-      "prompt": "Which two ordinary user accounts rejected the sprayed password?",
+      "prompt": "Which two regular user accounts rejected the sprayed password?",
       "answer": {
         "type": "set",
         "canonical": ["john.reyes", "maria.chen"],
@@ -350,7 +350,7 @@
           "maria.chen": ["MERIDIAN\\maria.chen"]
         }
       },
-      "hint": "Separate ordinary-user failures from the other authentication attempts.",
+      "hint": "Check failed Kerberos pre-authentication.",
       "evidence": {
         "sources": ["Windows Security Kerberos pre-authentication failures", "Zeek Kerberos"],
         "fields": ["event_id", "target_user_name", "status", "ip_address", "client", "error_msg"]
@@ -359,16 +359,16 @@
     {
       "id": "019",
       "stage": "credential-access",
-      "title": "Rejected privileged account",
+      "title": "Rejected admin",
       "difficulty": "medium",
       "points": 75,
-      "prompt": "Which administrator-named account also rejected the sprayed password?",
+      "prompt": "Which admin-named account also rejected the sprayed password?",
       "answer": {
         "type": "string",
         "canonical": "it.admin",
         "accepted": ["it.admin", "MERIDIAN\\it.admin"]
       },
-      "hint": "One failed identity is named for a privileged role.",
+      "hint": "Same events as the last question.",
       "evidence": {
         "sources": ["Windows Security Kerberos pre-authentication failures", "Zeek Kerberos"],
         "fields": ["event_id", "target_user_name", "status", "ip_address", "client", "error_msg"]
@@ -377,16 +377,16 @@
     {
       "id": "020",
       "stage": "credential-access",
-      "title": "The credential that worked",
+      "title": "Working credential",
       "difficulty": "medium",
       "points": 75,
-      "prompt": "Which account accepted the password and enabled lateral movement?",
+      "prompt": "Which account accepted the sprayed password?",
       "answer": {
         "type": "string",
         "canonical": "MERIDIAN\\svc.wksdeploy",
         "accepted": ["MERIDIAN\\svc.wksdeploy", "svc.wksdeploy"]
       },
-      "hint": "Look for the successful authentication that follows the failures.",
+      "hint": "Look for a successful logon right after the failures.",
       "evidence": {
         "sources": ["Windows Security", "Zeek Kerberos", "Zeek SMB"],
         "fields": ["event_id", "target_user_name", "logon_type", "ip_address"]
@@ -395,16 +395,16 @@
     {
       "id": "021",
       "stage": "lateral-movement",
-      "title": "The second foothold",
+      "title": "Second host",
       "difficulty": "easy",
       "points": 50,
-      "prompt": "Which workstation was compromised through lateral movement?",
+      "prompt": "Which workstation did the attacker move to?",
       "answer": {
         "type": "string",
         "canonical": "WS03",
         "accepted": ["WS03", "WS03.meridian.internal"]
       },
-      "hint": "Trace the successful credential use to its resulting foothold.",
+      "hint": "Where did that account log on next?",
       "evidence": {
         "sources": ["Windows Security", "Windows System", "Sysmon process creation"],
         "fields": ["computer_name", "event_id", "service_name", "image"]
@@ -413,16 +413,16 @@
     {
       "id": "022",
       "stage": "lateral-movement",
-      "title": "Movement utility",
+      "title": "Movement tool",
       "difficulty": "medium",
       "points": 75,
-      "prompt": "Which remote service-execution utility performed the lateral movement?",
+      "prompt": "Which remote service execution tool did the attacker use to move?",
       "answer": {
         "type": "string",
         "canonical": "PAExec.exe",
         "accepted": ["PAExec.exe", "PAExec"]
       },
-      "hint": "Correlate execution on the source with service activity on the target.",
+      "hint": "Search command lines on the first host for UNC paths.",
       "evidence": {
         "sources": ["Sysmon process creation", "Windows System"],
         "fields": ["image", "parent_image", "commandline", "event_id", "service_name"]
@@ -431,15 +431,15 @@
     {
       "id": "023",
       "stage": "lateral-movement",
-      "title": "Remote share trail",
+      "title": "Admin shares",
       "difficulty": "medium",
       "points": 100,
-      "prompt": "Which two administrative SMB shares show credential testing and remote payload staging?",
+      "prompt": "Which two admin shares were used, one to test credentials and one to stage the payload?",
       "answer": {
         "type": "set",
         "canonical": ["IPC$", "ADMIN$"]
       },
-      "hint": "Different stages of the movement use different remote shares.",
+      "hint": "Zeek's SMB mapping log records share names.",
       "evidence": {
         "sources": ["Sysmon process creation", "Zeek SMB mapping"],
         "fields": ["commandline", "path", "src_ip", "dst_ip"]
@@ -448,16 +448,16 @@
     {
       "id": "024",
       "stage": "lateral-movement",
-      "title": "Service residue",
+      "title": "Service name",
       "difficulty": "hard",
       "points": 100,
-      "prompt": "What exact service name was installed on the lateral-movement target?",
+      "prompt": "What service name was installed on the target?",
       "answer": {
         "type": "string",
         "canonical": "PAExec-6740-WS02",
         "accepted": ["PAExec-6740-WS02"]
       },
-      "hint": "Distinguish the installed service name from its binary path.",
+      "hint": "System event 7045 records new services.",
       "evidence": {
         "sources": ["Windows System"],
         "fields": ["computer_name", "event_id", "service_name", "service_file_name", "message"]
@@ -466,16 +466,16 @@
     {
       "id": "025",
       "stage": "lateral-movement",
-      "title": "Privilege on arrival",
+      "title": "Payload account",
       "difficulty": "easy",
       "points": 50,
-      "prompt": "Under which security principal did the payload run on the second workstation?",
+      "prompt": "Which account did the payload run as on the second workstation?",
       "answer": {
         "type": "string",
         "canonical": "NT AUTHORITY\\SYSTEM",
         "accepted": ["NT AUTHORITY\\SYSTEM", "SYSTEM", "LocalSystem"]
       },
-      "hint": "Use the effective identity on the target, not the credential used in transit.",
+      "hint": "Check the user on the payload's process start, not the logon account.",
       "evidence": {
         "sources": ["Sysmon process creation"],
         "fields": ["computer_name", "image", "parent_image", "user"]
@@ -487,12 +487,12 @@
       "title": "Attacker domains",
       "difficulty": "medium",
       "points": 100,
-      "prompt": "Which two attacker-controlled domains appear in the intrusion?",
+      "prompt": "Which two attacker domains appear in the intrusion?",
       "answer": {
         "type": "set",
         "canonical": ["update-cache-m9tdco18phmc.com", "support-assist-7wfncs.online"]
       },
-      "hint": "Separate rare intrusion-related destinations from routine services.",
+      "hint": "Rank DNS queries from the affected hosts and look for rare names.",
       "evidence": {
         "sources": ["Zeek DNS", "Sysmon DNS query"],
         "fields": ["src_ip", "query", "answers"]
@@ -501,10 +501,10 @@
     {
       "id": "027",
       "stage": "infrastructure",
-      "title": "Infrastructure mapping",
+      "title": "Domain to IP",
       "difficulty": "medium",
       "points": 100,
-      "prompt": "Map each attacker domain to its resolved public IP address.",
+      "prompt": "Which IP address did each attacker domain resolve to?",
       "answer": {
         "type": "mapping",
         "canonical": {
@@ -512,7 +512,7 @@
           "support-assist-7wfncs.online": "192.0.2.146"
         }
       },
-      "hint": "Pair name resolution with the connections that follow it.",
+      "hint": "Check Zeek DNS answers.",
       "evidence": {
         "sources": ["Zeek DNS", "Zeek connection", "Sysmon network connection"],
         "fields": ["query", "answers", "dst_ip"]
@@ -521,16 +521,16 @@
     {
       "id": "028",
       "stage": "infrastructure",
-      "title": "Implant channel",
+      "title": "Implant port",
       "difficulty": "medium",
       "points": 75,
-      "prompt": "Which destination port was used for the implant command-and-control channel?",
+      "prompt": "Which destination port did the implant use for command and control?",
       "answer": {
         "type": "string",
         "canonical": "8888",
         "accepted": ["8888", "TCP/8888", "8888/tcp"]
       },
-      "hint": "Separate payload traffic from the remote-support traffic.",
+      "hint": "Separate the implant's traffic from the remote support tool's traffic.",
       "evidence": {
         "sources": ["Zeek connection", "Zeek SSL", "Sysmon network connection"],
         "fields": ["image", "dst_ip", "dst_port", "proto"]
@@ -539,10 +539,10 @@
     {
       "id": "029",
       "stage": "infrastructure",
-      "title": "Remote-support signaling and relay",
+      "title": "Remote support ports",
       "difficulty": "hard",
       "points": 100,
-      "prompt": "Which two destination ports carried remote-support signaling and relay traffic?",
+      "prompt": "Which two destination ports carried the remote support tool's signaling and relay traffic?",
       "answer": {
         "type": "set",
         "canonical": ["21116", "21117"],
@@ -551,7 +551,7 @@
           "21117": ["TCP/21117", "21117/tcp"]
         }
       },
-      "hint": "Count only completed connections from the client process; ignore attempts that were never answered.",
+      "hint": "Count only completed connections from the client. Ignore attempts that were never answered.",
       "evidence": {
         "sources": ["Sysmon network connection", "Zeek connection"],
         "fields": ["image", "dst_ip", "dst_port", "conn_state"]
@@ -560,16 +560,16 @@
     {
       "id": "030",
       "stage": "infrastructure",
-      "title": "Additional remote-support connection",
+      "title": "Extra remote support port",
       "difficulty": "medium",
       "points": 50,
-      "prompt": "Which additional destination port did the remote-support client successfully connect to?",
+      "prompt": "Which other destination port did the remote support tool connect to successfully?",
       "answer": {
         "type": "string",
         "canonical": "21115",
         "accepted": ["21115", "TCP/21115", "21115/tcp"]
       },
-      "hint": "Review the complete connection set rather than only the long-lived channels.",
+      "hint": "Look at all of its connections, not only the long ones.",
       "evidence": {
         "sources": ["Sysmon network connection", "Zeek connection"],
         "fields": ["image", "dst_ip", "dst_port", "proto"]
@@ -578,10 +578,10 @@
     {
       "id": "031",
       "stage": "scope",
-      "title": "Footholds calling home",
+      "title": "Callbacks",
       "difficulty": "medium",
       "points": 75,
-      "prompt": "Which two workstations generated implant callbacks to the attacker infrastructure?",
+      "prompt": "Which two workstations called back to the implant's server?",
       "answer": {
         "type": "set",
         "canonical": ["WS02", "WS03"],
@@ -590,7 +590,7 @@
           "WS03": ["WS03.meridian.internal"]
         }
       },
-      "hint": "Confirm the originating endpoints rather than relying on intermediary network traffic.",
+      "hint": "Use endpoint logs to confirm the source host.",
       "evidence": {
         "sources": ["Sysmon network connection"],
         "fields": ["computer_name", "image", "dst_ip", "dst_port"]
