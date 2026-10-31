@@ -1,0 +1,20 @@
+name: outbound_beacons
+description: >-
+  Regular, repeated connections from an internal host to one external destination and port.
+  Time sync, multicast and internal traffic are tuned out as known-good.
+model_type: beacon
+definition:
+  network:
+    src_field: src_ip
+    dst_field: dst_ip
+    port_field: dst_port
+    bytes_field: orig_bytes
+  window: 7d
+  beacon:
+    min_connections: 4
+    score_threshold: 0.8
+  alert:
+    severity: high
+  source_bql: >-
+    channel="conn" dst_port!="123"
+    NOT cidr(dst_ip, "224.0.0.0/4") NOT cidr(dst_ip, "10.0.0.0/8")

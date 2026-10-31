@@ -1,0 +1,16 @@
+name: remote_tools_first_seen
+description: >-
+  First and last time each remote access or remote execution tool ran on each host.
+  Keyed on the binary's original file name, so a renamed copy still matches.
+model_type: first_seen
+definition:
+  key_fields:
+    - computer_name
+    - original_file_name
+    - image
+  alert:
+    severity: medium
+    alert_on_new: true
+  source_bql: >-
+    bifract_category="process_creation"
+    original_file_name=~teamviewer,rustdesk,anydesk,screenconnect,splashtop,paexec,psexec,remcom,meshagent,atera

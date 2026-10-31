@@ -1,0 +1,97 @@
+site_name: Bifract Labs
+site_description: Realistic security datasets and guided investigations for Bifract
+site_url: https://labs.bifract.io
+repo_url: https://github.com/zaneGittins/bifract-labs
+repo_name: zaneGittins/bifract-labs
+copyright: Datasets and guides licensed CC BY 4.0
+
+# Only guide/ is published. dataset/, tools/ and labs/ never reach the site.
+docs_dir: guide
+
+theme:
+  name: material
+  logo: assets/logo.svg
+  favicon: assets/logo.svg
+  font:
+    text: Inter
+    code: IBM Plex Mono
+  palette:
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+  features:
+    - navigation.sections
+    - navigation.indexes
+    - navigation.expand
+    - navigation.top
+    - navigation.footer
+    - navigation.instant
+    - navigation.tracking
+    - toc.follow
+    - search.highlight
+    - content.code.copy
+    - content.tooltips
+
+hooks:
+  - hooks/bql.py
+  - hooks/questions.py
+
+plugins:
+  - search
+  - glightbox:
+      skip_classes:
+        - no-zoom
+
+extra_css:
+  - assets/labs.css
+extra_javascript:
+  - assets/labs.js
+
+markdown_extensions:
+  - admonition
+  - abbr
+  - pymdownx.details
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.keys
+  - tables
+  - attr_list
+  - md_in_html
+  - toc:
+      permalink: true
+
+nav:
+  - Home: index.md
+  - "Lab 001: Meridian":
+    - Overview: 001/index.md
+    - Setup: 001/setup.md
+    - Questions: 001/questions.md
+    - Walkthrough:
+      - 001/walkthrough/index.md
+      - 1. Hunting with baselines: 001/walkthrough/01-baselines.md
+      - 2. Initial access: 001/walkthrough/02-initial-access.md
+      - 3. The loader: 001/walkthrough/03-loader.md
+      - 4. Hands on keyboard: 001/walkthrough/04-hands-on-keyboard.md
+      - 5. Persistence: 001/walkthrough/05-persistence.md
+      - 6. Credential access: 001/walkthrough/06-credential-access.md
+      - 7. Lateral movement: 001/walkthrough/07-lateral-movement.md
+      - 8. Infrastructure and scope: 001/walkthrough/08-infrastructure.md
+      - 9. Timeline and takeaways: 001/walkthrough/09-summary.md

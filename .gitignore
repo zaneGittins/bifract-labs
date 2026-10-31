@@ -5,3 +5,4 @@ tools/
 labs/*/ctfd/
 __pycache__/
 *.pyc
+site/

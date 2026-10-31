@@ -1,0 +1,16 @@
+name: outbound_long_connections
+description: >-
+  Long-lived outbound sessions such as remote desktop relays, tunnels or persistent C2.
+model_type: long_connection
+definition:
+  network:
+    src_field: src_ip
+    dst_field: dst_ip
+    port_field: dst_port
+    duration_field: duration
+  window: 7d
+  long_conn:
+    score_threshold: 0.5
+  alert:
+    severity: high
+  source_bql: channel="conn" NOT cidr(dst_ip, "10.0.0.0/8")
