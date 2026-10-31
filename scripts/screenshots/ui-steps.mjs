@@ -77,45 +77,6 @@ async function modelScores(env, name) {
 }
 
 export const uiSteps = {
-  async 'setup-analytics'(env) {
-    await open(env, '#settings/platform');
-    const head = env.page.getByText('Endpoint analytics', { exact: true }).first();
-    await head.scrollIntoViewIfNeeded();
-    await env.page.waitForTimeout(400);
-    const h = await head.boundingBox();
-    const sens = await env.page.getByText('Process graph sensitivity').first().boundingBox();
-    return { x: h.x - 20, y: h.y - 18, width: 1112 + 40, height: sens.y + 60 - (h.y - 18) };
-  },
-
-  async 'setup-dataset'(env) {
-    const fid = await fractalId(env);
-    await open(env, `#f/${fid}/exchange`);
-    await env.page.getByText('Lab 001: Meridian workstation intrusion').first().click();
-    await env.page.waitForTimeout(1500);
-    const box = await mainBox(env);
-    // Stop above the definition block: a test mirror names its own fractal there.
-    const def = await env.page.getByText('Definition', { exact: true }).first().boundingBox();
-    const panel = { x: box.x + 8, y: 8, width: 772, height: box.height };
-    return { ...panel, height: Math.ceil(def.y - 14 - panel.y) };
-  },
-
-  async 'setup-exchange'(env) {
-    const fid = await fractalId(env);
-    await open(env, `#f/${fid}/exchange/rmm-hunting`);
-    const last = await env.page.getByText('Remote Management Tools', { exact: true }).first().boundingBox();
-    const box = await mainBox(env);
-    return below({ x: box.x + 8, y: 8, width: 772, height: box.height }, last, 40);
-  },
-
-  async 'setup-models'(env) {
-    const fid = await fractalId(env);
-    await open(env, `#f/${fid}/models`, 4000);
-    const rows = env.page.locator('table:visible tbody tr');
-    const n = await rows.count();
-    const last = await rows.nth(Math.max(0, n - 1)).boundingBox();
-    return below(await mainBox(env), last);
-  },
-
   'model-remote-tools': (env) => modelRows(env, 'remote_tools_first_seen'),
   'model-rmm-users': (env) => modelRows(env, 'rmm_users'),
   'model-beacons': (env) => modelScores(env, 'outbound_beacons'),
