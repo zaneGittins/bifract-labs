@@ -14,7 +14,8 @@ python3 scripts/screenshots/optimize.py /tmp/shots guide/001/shots
 ```
 
 Options after the caption: `rows=N` (rows to keep, default 14), `wait=ms`, `click=N` (open row N's
-detail), `graph` (keep the whole view, for `pgraph()`).
+detail), `graph` (keep the whole view, for `pgraph()`), `narrow` (capture a UI step at the narrower
+query width so its text stays readable).
 
 Capture is fail-closed: a page showing any blocklisted term (range names, the home IP, local paths)
 is not saved.
