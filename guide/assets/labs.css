@@ -266,6 +266,7 @@ body { background: var(--lb-bg); }
 .md-typeset .lb-actions > p { display: flex; flex-wrap: wrap; gap: 0.6rem; margin: 0; }
 .md-typeset .lb-actions .md-button { margin: 0; }
 .md-typeset .lb-actions small { margin-left: 0.4em; font-weight: 400; opacity: 0.8; }
+.md-typeset .lb-facts { font-size: 0.7rem; color: var(--lb-dim); margin: 0 0 1.4rem; }
 /* A key/value table with no header row */
 .md-typeset table:not([class]) thead:has(th:empty:only-child, th:empty + th:empty) { display: none; }
 
