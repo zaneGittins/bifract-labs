@@ -10,7 +10,6 @@ docs_dir: guide
 
 theme:
   name: material
-  custom_dir: guide/overrides
   logo: assets/logo.svg
   favicon: assets/logo.svg
   font:
