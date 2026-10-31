@@ -5,6 +5,8 @@ on:
     branches: [main]
     paths:
       - "guide/**"
+      - "hooks/**"
+      - "labs/*/questions.json"
       - "mkdocs.yml"
       - ".github/workflows/pages.yml"
   # Build on the PR too so a broken link fails review, not the deploy.
@@ -13,6 +15,8 @@ on:
     branches: [main]
     paths:
       - "guide/**"
+      - "hooks/**"
+      - "labs/*/questions.json"
       - "mkdocs.yml"
       - ".github/workflows/pages.yml"
   workflow_dispatch:
@@ -36,7 +40,7 @@ jobs:
         with:
           python-version: "3.x"
 
-      - run: pip install mkdocs-material==9.7.6
+      - run: pip install mkdocs-material==9.7.6 mkdocs-glightbox==0.5.3
 
       - run: mkdocs build --strict
 

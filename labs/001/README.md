@@ -2,6 +2,8 @@
 
 A Windows intrusion investigation spanning endpoint, identity, and network telemetry. Reconstruct the attack from initial user execution through persistence, credential abuse, lateral movement, and scoping.
 
+**Setup, a step-by-step walkthrough and the scored question set are at [labs.bifract.io/001](https://labs.bifract.io/001/).** Load it in one click from the Bifract Exchange (**Exchange → Datasets → Lab 001**).
+
 ## ATT&CK focus
 
 | Technique | Directly observed behavior |
@@ -37,7 +39,7 @@ sha256sum -c SHA256SUMS
 zstd -d bifract-labs-001.jsonl.zst
 ```
 
-The source question set is in [questions.json](questions.json).
+The source question set is in [questions.json](questions.json). The models the walkthrough uses are in [bifract/models](bifract/models/).
 
 ## Environment
 

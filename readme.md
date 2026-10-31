@@ -4,11 +4,13 @@ Realistic security datasets for CTFs, analyst training, and detection engineerin
 
 Datasets are exported from [Bifract](https://github.com/zaneGittins/bifract), a self-hosted, open source SIEM built on ClickHouse.
 
+**Guided walkthroughs, setup and scored questions: [labs.bifract.io](https://labs.bifract.io).**
+
 ## Labs
 
 | Lab | Scenario | Dataset |
 |---|---|---|
-| [001](labs/001/) | Meridian workstation intrusion | `bifract-labs-001.jsonl.zst` |
+| [001](https://labs.bifract.io/001/) | Meridian workstation intrusion | `bifract-labs-001.jsonl.zst` |
 
 Datasets are attached to [Releases](https://github.com/zaneGittins/bifract-labs/releases), not stored in the repo. Each lab folder has a README and a `questions.json` (answers included).
 
