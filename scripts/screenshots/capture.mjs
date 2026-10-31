@@ -97,7 +97,12 @@ const CLEAN_CSS = `
   * { caret-color: transparent !important; }
 `;
 
+// Query results read better a little narrower; graphs and UI pages keep the full width.
+const WIDE = { width: 1360, height: 860 };
+const NARROW = { width: 1100, height: 860 };
+
 async function captureQuery(page, shot) {
+  await page.setViewportSize(shot.opts.graph ? WIDE : NARROW);
   await page.goto(deepLink(shot.query));
   await page.addStyleTag({ content: CLEAN_CSS });
   const graph = shot.opts.graph;
@@ -156,6 +161,7 @@ for (const shot of shots) {
     if (shot.query) {
       clip = await captureQuery(page, shot);
     } else if (uiSteps[shot.id]) {
+      await page.setViewportSize(WIDE);
       clip = await uiSteps[shot.id](env, shot);
       await assertClean(page, shot.id);
     } else {
