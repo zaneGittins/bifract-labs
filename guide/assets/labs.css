@@ -262,10 +262,32 @@ body { background: var(--lb-bg); }
 .md-typeset figure.shot figcaption b { color: var(--lb-muted); font-weight: 600; }
 
 /* Home */
-.md-typeset .lb-home { max-width: 44rem; margin: 1.5rem auto 0; }
-.md-typeset .lb-home h1 { font-size: 2rem; margin: 0 0 0.8rem; }
+.md-typeset .lb-home { max-width: 46rem; margin: 1rem auto 0; }
 .md-typeset .lb-home > p { color: var(--lb-muted); }
-.md-typeset .lb-home h2 { margin-top: 2.2rem; }
+.md-typeset .lb-home h2 { margin-top: 2.4rem; }
+.md-typeset .lb-hero {
+  padding: 2.6rem 2.2rem 1.4rem;
+  border: 1px solid var(--lb-border-soft);
+  border-radius: 16px;
+  background:
+    radial-gradient(40rem 16rem at 0% 0%, var(--lb-accent-soft), transparent 70%),
+    radial-gradient(30rem 14rem at 100% 100%, var(--lb-accent-soft), transparent 70%),
+    var(--lb-surface);
+}
+.md-typeset .lb-hero h1 { font-size: 2.1rem; line-height: 1.15; margin: 0.3rem 0 0.8rem; }
+.md-typeset .lb-hero > p:not(.lb-kicker) { color: var(--lb-muted); max-width: 34rem; }
+.md-typeset .lb-hero .md-button { margin: 0.4rem 0.5rem 0 0; }
+@media (max-width: 44.9em) { .md-typeset .lb-hero { padding: 1.8rem 1.2rem 1rem; } .md-typeset .lb-hero h1 { font-size: 1.7rem; } }
+
+/* Events-per-hour chart (hooks/volume.py) */
+.md-typeset .lb-volume { display: block; width: 100%; margin: 2.2rem 0 0; }
+.md-typeset .lb-volume svg { display: block; width: 100%; height: auto; overflow: visible; }
+.md-typeset .lb-volume .bar { fill: var(--lb-accent); opacity: 0.5; transition: opacity 0.1s ease; }
+.md-typeset .lb-volume .hit { fill: transparent; }
+.md-typeset .lb-volume g:hover .bar { opacity: 1; }
+.md-typeset .lb-volume text { fill: var(--lb-dim); font-family: var(--md-code-font-family); font-size: 9px; }
+.md-typeset .lb-volume figcaption { margin: 0.5rem 0 0; max-width: none; text-align: left; font-size: 0.62rem; font-style: normal; color: var(--lb-dim); }
+@media (max-width: 44.9em) { .md-typeset .lb-volume text { display: none; } }
 .md-typeset .md-button {
   border-radius: 8px;
   font-weight: 600;
