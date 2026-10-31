@@ -8,7 +8,7 @@ hide:
 
 # Bifract Labs
 
-Threat hunting labs for [Bifract](https://github.com/zaneGittins/bifract). Each lab is a few days of logs from a small Windows network with an intrusion in it. Load the logs, then work through the walkthrough or answer the questions.
+Labs for [Bifract](https://github.com/zaneGittins/bifract). Each lab is a few days of logs from a small Windows network with an intrusion in it. Load the logs, then work through the walkthrough or answer the questions.
 
 ## Labs
 
