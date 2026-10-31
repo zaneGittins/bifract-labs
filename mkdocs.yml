@@ -1,0 +1,55 @@
+site_name: Bifract Labs
+site_description: Realistic security datasets and guided investigations for Bifract
+site_url: https://labs.bifract.io
+repo_url: https://github.com/zaneGittins/bifract-labs
+repo_name: zaneGittins/bifract-labs
+
+# Only guide/ is published. dataset/, tools/ and labs/ never reach the site.
+docs_dir: guide
+
+theme:
+  name: material
+  palette:
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: deep purple
+      accent: purple
+      toggle:
+        icon: material/brightness-7
+        name: Switch to light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: deep purple
+      accent: purple
+      toggle:
+        icon: material/brightness-4
+        name: Switch to dark mode
+  features:
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.highlight
+    - content.code.copy
+
+plugins:
+  - search
+
+markdown_extensions:
+  - admonition
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - tables
+  - attr_list
+  - md_in_html
+  - toc:
+      permalink: true
+
+nav:
+  - Home: index.md
+  - "Lab 001: Meridian":
+    - Overview: 001/index.md
