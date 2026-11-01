@@ -13,7 +13,7 @@ title: "4. Hands on keyboard"
 Admins and scripts run discovery tools all the time, almost always through `cmd.exe`. On WS02, RustDesk alone runs `tasklist` through `cmd /C` about 48,000 times. So I look for discovery tools whose parent **isn't** a shell:
 
 ```bql
-bifract_category="process_creation" | image=~whoami,ipconfig,hostname,systeminfo,"\\net.exe",nltest,tasklist | NOT parent_image=$"\\cmd.exe" | groupBy(computer_name, parent_image, image)
+bifract_category="process_creation" | image=~whoami,ipconfig,hostname,systeminfo,"\\net.exe",nltest,tasklist | parent_image!=$"\\cmd.exe" | groupBy(computer_name, parent_image, image)
 ```
 <!-- shot: q010-discovery | Discovery tools started directly by something other than cmd.exe. | rows=6 -->
 
@@ -35,17 +35,17 @@ The implants also started `cmd.exe` as a wrapper. To see what each wrapper ran, 
 
 ```bql
 let &wrappers := bifract_category="process_creation" parent_image=~QuickConnect,Greenshot image=$"\\cmd.exe" | table(process_guid);
-bifract_category="process_creation" | in(parent_process_guid, &wrappers) | NOT image=$"\\conhost.exe" | groupBy(computer_name, parent_image, parent_commandline, image)
+bifract_category="process_creation" | in(parent_process_guid, &wrappers) | image!=$"\\conhost.exe" | groupBy(computer_name, parent_image, parent_commandline, image)
 ```
 <!-- shot: q011-wrappers | What the implants' cmd.exe wrappers ran. | rows=4 -->
 
-`cmd.exe /d /s /c systeminfo.exe` ran `systeminfo.exe` on WS02 (twice) and WS03. The last row is a `for` loop that runs `net.exe` eight times: four `net use` attempts against WS03, each after a `net use /delete`. [Chapter 6](06-credential-access.md) covers it.
+`cmd.exe /d /s /c systeminfo.exe` ran `systeminfo.exe` on WS02 (twice) and WS03. The other row is a `for` loop that runs `net.exe` eight times: four `net use` attempts against WS03, each after a `net use /delete`. [Chapter 6](06-credential-access.md) covers it.
 
 !!! finding "Finding · Q011"
     Operating system inventory came from **cmd.exe → systeminfo.exe**.
 
 !!! tip "Bindings"
-    `let &name := ...;` runs a query and keeps its result for the next one. End the binding with `table(field)`, because `in()` can't use the `_count` column a `groupBy()` adds.
+    `let &name := ...;` runs a query and keeps its result for the next one. Here `in()` matches each process's parent GUID against that list.
 
 ## The support tool <span class="q-ref">Q012</span> { #q012 }
 
@@ -71,7 +71,7 @@ bifract_category="network_connect" | image=~QuickConnect,rustdesk | groupBy(comp
 Back to the Run dialog history from chapter 2:
 
 ```bql
-event_id="13" target_object=~"\\RunMRU\\" | target_object!=/MRUList$/ | sort(timestamp) | table(timestamp, computer_name, image, details)
+event_id="13" target_object=~"\\RunMRU\\" | target_object!=$"MRUList" | sort(timestamp) | table(timestamp, computer_name, image, details)
 ```
 <!-- shot: q013-runmru | The second and third Run entries come after RustDesk connects. | rows=3 -->
 

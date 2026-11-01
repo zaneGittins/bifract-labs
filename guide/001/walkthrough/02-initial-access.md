@@ -13,7 +13,7 @@ title: "2. Initial access"
 When a user presses ++win+r++ and runs something, Explorer writes the command to the `RunMRU` registry key. Sysmon logs the write as event 13 (registry value set).
 
 ```bql
-event_id="13" target_object=~"\\RunMRU\\" | target_object!=/MRUList$/ | sort(timestamp) | table(timestamp, computer_name, image, details)
+event_id="13" target_object=~"\\RunMRU\\" | target_object!=$"MRUList" | sort(timestamp) | table(timestamp, computer_name, image, details)
 ```
 <!-- shot: q003-runmru | Everything typed into the Run dialog, oldest first. | rows=3 -->
 

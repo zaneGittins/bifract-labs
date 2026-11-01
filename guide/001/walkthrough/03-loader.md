@@ -88,9 +88,6 @@ ptg(start="9D045BEA-5269-6AE3-CC3D-000000001100", direction=forward, depth=1)
 !!! finding "Finding · Q009"
     The loader started **QuickConnect.Service.exe** at 14:04:30. That's the first foothold.
 
-!!! tip "Give ptg() a direction"
-    For this seed, `ptg()` with the default `direction=both` can be very slow. Pass `direction=forward` (or `backward`).
-
 ## See everything it touched
 
 `pgr()` goes further than `ptg()`. It rebuilds the process tree, scores each file, network and DNS action by how rare it is on other hosts, and hides the everyday noise. Start it on the loader and draw it with `pgraph()`:

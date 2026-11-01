@@ -40,25 +40,25 @@ Malware usually calls home on a timer, and people don't. That regular check-in i
 
 The `outbound_beacons` model scores every internal to external pair by how regular its timing and sizes are.
 
-Network models score a rolling window that ends now, and they can't be backfilled, so the model's page stays empty for a dataset from the past. Score the lab on demand instead: open the model, click **Edit**, open the **Scores** tab, and pick a window that reaches back to Oct 27, 2026 (**Last 30 Days** while the lab is recent).
+Network models score a rolling window that ends now, so a dataset from the past needs a one-time **Score range** ([setup](../setup.md#add-the-models), step 4). Then open the model:
 
-<!-- shot: model-beacons | `outbound_beacons`: two pairs out of 949 score above 0.8, both from WS02. | narrow -->
+<!-- shot: model-beacons | `outbound_beacons`: two pairs out of 949 score above 0.8, both from WS02. -->
 
 Two pairs out of 949 cross the threshold, and both come from `10.1.10.22`, which is WS02:
 
 | Score | Destination | Connections |
 |---|---|---|
-| 0.916 | `203.0.113.87:8888` | 2,496 |
-| 0.875 | `192.0.2.146:21116` | 2,779 |
+| 0.895 | `203.0.113.87:8888` | 2,496 |
+| 0.851 | `192.0.2.146:21116` | 2,779 |
 
 !!! tip "Tuning out the known good"
     The model's source query drops time sync (`dst_port!="123"`), multicast and internal destinations. Without that, DC01's NTP syncs top the list, because they're regular by design.
 
 ## What stays connected too long?
 
-Interactive remote sessions hold a connection open. The `outbound_long_connections` model ranks outbound pairs by how long they stay up. Open it the same way: **Edit**, then **Scores**.
+Interactive remote sessions hold a connection open. The `outbound_long_connections` model ranks outbound pairs by how long they stay up:
 
-<!-- shot: model-long-conn | `outbound_long_connections`: the WS02 to 192.0.2.146 RustDesk pair ranks first. | narrow -->
+<!-- shot: model-long-conn | `outbound_long_connections`: the WS02 to 192.0.2.146 RustDesk pair ranks first. -->
 
 The top pair is the same `192.0.2.146` destination the beacon model found, on RustDesk's port 21116. All three models point at WS02.
 

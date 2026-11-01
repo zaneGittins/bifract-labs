@@ -34,7 +34,8 @@ With the `bifract-labs-001` fractal selected:
 
 1. **Add the remote management tool bundle.** In **Exchange**, open **Remote management tool hunting**, click **Add all**, then **Add 5 items**. This adds the `rmm_users` model.
 2. **Import the lab models.** Download [remote_tools_first_seen.yaml](https://github.com/zaneGittins/bifract-labs/raw/main/labs/001/bifract/models/remote_tools_first_seen.yaml), [outbound_beacons.yaml](https://github.com/zaneGittins/bifract-labs/raw/main/labs/001/bifract/models/outbound_beacons.yaml) and [outbound_long_connections.yaml](https://github.com/zaneGittins/bifract-labs/raw/main/labs/001/bifract/models/outbound_long_connections.yaml), then use **Analytics**, **Import YAML** for each.
-3. **Backfill two of them.** Open `rmm_users`, click **Backfill**, pick **Custom range** from **Oct 27, 2026** to **Nov 1, 2026**, and start it. Do the same for `remote_tools_first_seen`. The two network models can't be backfilled; [chapter 1](walkthrough/01-baselines.md) shows how to score them.
+3. **Backfill two of them.** Open `rmm_users`, click **Backfill**, pick **Custom range** from **Oct 27, 2026** to **Nov 1, 2026**, and start it. Do the same for `remote_tools_first_seen`.
+4. **Score the network models.** Open `outbound_beacons` and click **Score range**. If you added the lab from the Exchange, the range is already filled in. Otherwise enter **2026-10-27 00:00** to **2026-10-31 00:00**. Click **Score range** again. Do the same for `outbound_long_connections`.
 
 Backfilled models show **Stale** and network models show **Learning**. That's expected for a dataset from the past.
 
