@@ -274,29 +274,46 @@ body { background: var(--lb-bg); }
 .md-typeset .lb-home { max-width: 46rem; margin: 1rem auto 0; }
 .md-typeset .lb-home > p { color: var(--lb-muted); }
 .md-typeset .lb-home h2 { margin-top: 2.4rem; }
-.md-typeset .lb-hero {
-  padding: 2.6rem 2.2rem 1.4rem;
-  border: 1px solid var(--lb-border-soft);
+/* Hero: a dark band in both themes, with the Bifract mark drawn large */
+.md-typeset .lb-band {
+  --band-bg: #1b1238;
+  --band-text: #cfc6e6;
+  --band-strong: #ffffff;
+  --band-link: #c9b2ff;
+  --band-mark: #8b63d6;
+  --band-button: #9c6ade;
+  position: relative;
+  overflow: hidden;
+  margin-top: 1rem;
+  padding: 3rem 2.4rem 2.6rem;
   border-radius: 16px;
-  background:
-    radial-gradient(40rem 16rem at 0% 0%, var(--lb-accent-soft), transparent 70%),
-    radial-gradient(30rem 14rem at 100% 100%, var(--lb-accent-soft), transparent 70%),
-    var(--lb-surface);
+  background: var(--band-bg);
+  color: var(--band-text);
 }
-.md-typeset .lb-hero h1 { font-size: 2.1rem; line-height: 1.15; margin: 0.3rem 0 0.8rem; }
-.md-typeset .lb-hero > p:not(.lb-kicker) { color: var(--lb-muted); max-width: 34rem; }
-.md-typeset .lb-hero .md-button { margin: 0.4rem 0.5rem 0 0; }
-@media (max-width: 44.9em) { .md-typeset .lb-hero { padding: 1.8rem 1.2rem 1rem; } .md-typeset .lb-hero h1 { font-size: 1.7rem; } }
+.md-typeset .lb-band h1 { position: relative; font-size: 2.4rem; line-height: 1.1; margin: 0 0 0.8rem; color: var(--band-strong); }
+.md-typeset .lb-band p { position: relative; max-width: 25rem; font-size: 0.9rem; }
+.md-typeset .lb-band a:not(.md-button) { color: var(--band-link); }
+.md-typeset .lb-band .md-button { margin: 0.6rem 0.5rem 0 0; color: var(--band-strong); border-color: rgba(233, 227, 247, 0.35); }
+.md-typeset .lb-band .md-button--primary { background: var(--band-button); border-color: var(--band-button); }
+.md-typeset .lb-band .md-button:hover { background: var(--lb-accent-2); border-color: var(--lb-accent-2); }
+/* md_in_html wraps the svg in a <p>; let it position against the band instead */
+.md-typeset .lb-band p:has(> .lb-mark) { position: static; margin: 0; }
+.md-typeset .lb-band .lb-mark {
+  position: absolute;
+  top: 50%;
+  right: 2.5rem;
+  width: 15rem;
+  height: 15rem;
+  transform: translateY(-50%) rotate(-8deg);
+  color: var(--band-mark);
+  opacity: 0.75;
+}
+@media (max-width: 44.9em) {
+  .md-typeset .lb-band { padding: 2rem 1.3rem 1.8rem; }
+  .md-typeset .lb-band h1 { font-size: 1.9rem; }
+  .md-typeset .lb-band .lb-mark { top: auto; bottom: -5rem; right: -5rem; width: 12rem; height: 12rem; transform: rotate(-8deg); opacity: 0.3; }
+}
 
-/* Events-per-hour chart (hooks/volume.py) */
-.md-typeset .lb-volume { display: block; width: 100%; margin: 2.2rem 0 0; }
-.md-typeset .lb-volume svg { display: block; width: 100%; height: auto; overflow: visible; }
-.md-typeset .lb-volume .bar { fill: var(--lb-accent); opacity: 0.5; transition: opacity 0.1s ease; }
-.md-typeset .lb-volume .hit { fill: transparent; }
-.md-typeset .lb-volume g:hover .bar { opacity: 1; }
-.md-typeset .lb-volume text { fill: var(--lb-dim); font-family: var(--md-code-font-family); font-size: 9px; }
-.md-typeset .lb-volume figcaption { margin: 0.5rem 0 0; max-width: none; text-align: left; font-size: 0.62rem; font-style: normal; color: var(--lb-dim); }
-@media (max-width: 44.9em) { .md-typeset .lb-volume text { display: none; } }
 .md-typeset .md-button {
   border-radius: 8px;
   font-weight: 600;
@@ -383,7 +400,7 @@ body { background: var(--lb-bg); }
 /* Questions */
 .md-typeset .q-board {
   position: sticky;
-  top: 3.2rem;
+  top: 2.4rem; /* labs.js sets the header's exact height */
   z-index: 3;
   display: flex;
   align-items: center;
@@ -395,13 +412,17 @@ body { background: var(--lb-bg); }
   background: color-mix(in srgb, var(--lb-surface) 92%, transparent);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
+  transition: border-radius 0.15s ease;
+}
+/* Docked under the header: square top, no top border, solid so nothing shows through. */
+.md-typeset .q-board.is-stuck {
+  border-top-color: transparent;
+  border-radius: 0 0 var(--lb-radius) var(--lb-radius);
+  background: var(--lb-surface);
+  box-shadow: var(--lb-shadow);
 }
 .md-typeset .q-board b { font-size: 1rem; color: var(--lb-strong); font-variant-numeric: tabular-nums; }
-.md-typeset .q-board b, .md-typeset .q-board .q-solved { white-space: nowrap; }
-@media (max-width: 44.9em) {
-  .md-typeset .q-board { flex-wrap: wrap; row-gap: 0.5rem; }
-  .md-typeset .q-board .q-bar { order: 5; flex-basis: 100%; }
-}
+.md-typeset .q-board b { white-space: nowrap; }
 .md-typeset .q-board .q-bar { flex: 1; height: 6px; border-radius: 99px; background: var(--lb-surface-2); overflow: hidden; }
 .md-typeset .q-board .q-bar i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--lb-accent), var(--lb-accent-2)); transition: width 0.3s ease; }
 .md-typeset .q-board button { font-size: 0.64rem; color: var(--lb-dim); cursor: pointer; }
@@ -436,7 +457,6 @@ body { background: var(--lb-bg); }
 .md-typeset .q-pill.easy { color: var(--lb-good); background: var(--lb-good-soft); }
 .md-typeset .q-pill.medium { color: var(--lb-accent-2); background: var(--lb-accent-soft); }
 .md-typeset .q-pill.hard { color: var(--lb-warn); background: var(--lb-warn-soft); }
-.md-typeset .q-pts { font: 600 0.64rem var(--md-code-font-family); color: var(--lb-dim); }
 .md-typeset .q-done { display: none; color: var(--lb-good); font: 700 0.62rem var(--md-code-font-family); letter-spacing: 0.06em; }
 .md-typeset .q-card.is-solved .q-done { display: inline; }
 .md-typeset .q-prompt { margin: 0.45rem 0 0.7rem; font-size: 0.82rem; color: var(--lb-text); }

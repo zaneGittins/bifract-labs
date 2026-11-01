@@ -1,10 +1,10 @@
 # Bifract Labs
 
-Realistic security datasets for CTFs, analyst training, and detection engineering. Each lab is a full environment's logs with an intrusion inside, plus a question set to work through.
+Realistic security datasets for analyst training and detection engineering. Each lab is a full environment's logs with an intrusion inside, plus a question set to work through.
 
 Datasets are exported from [Bifract](https://github.com/zaneGittins/bifract), a self-hosted, open source SIEM built on ClickHouse.
 
-**Guided walkthroughs, setup and scored questions: [labs.bifract.io](https://labs.bifract.io).**
+**Guided walkthroughs, setup and questions: [labs.bifract.io](https://labs.bifract.io).**
 
 ## Labs
 

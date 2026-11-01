@@ -2,7 +2,7 @@
 
 A Windows intrusion investigation spanning endpoint, identity, and network telemetry. Reconstruct the attack from initial user execution through persistence, credential abuse, lateral movement, and scoping.
 
-**Setup, a step-by-step walkthrough and the scored question set are at [labs.bifract.io/001](https://labs.bifract.io/001/).** Load it in one click from the Bifract Exchange (**Exchange → Datasets → Lab 001**).
+**Setup, a step-by-step walkthrough and the question set are at [labs.bifract.io/001](https://labs.bifract.io/001/).** Load it in one click from the Bifract Exchange (**Exchange → Datasets → Lab 001**).
 
 ## ATT&CK focus
 
@@ -61,4 +61,4 @@ These fictional domains were unregistered as of 2026-10-30 (NXDOMAIN, and no reg
 - `update-cache-m9tdco18phmc.com`
 - `support-assist-7wfncs.online`
 
-Provided for education, analyst training, CTFs, and defensive research.
+Provided for education, analyst training, and defensive research.

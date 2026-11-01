@@ -62,4 +62,3 @@ Each of these is a baseline or a simple rule you can build with the data in this
 
 - Rebuild the findings as alerts in Bifract and replay the lab to test them.
 - Try the [questions](../questions.md) without the walkthrough open.
-- Running a team exercise? [Export the questions to CTFd](https://github.com/zaneGittins/bifract-labs/blob/main/docs/ctfd-export.md).

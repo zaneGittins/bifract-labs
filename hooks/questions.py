@@ -67,12 +67,10 @@ def _input_hint(ans):
 def render(data, defaults_case_sensitive=False):
     out = []
     qs = data["questions"]
-    total = sum(q["points"] for q in qs)
     out.append(
-        f'<div class="q-board" data-total="{total}" data-count="{len(qs)}" data-lab="{html.escape(data["lab_id"])}">'
-        f'<span>Score</span><b class="q-score">0 / {total}</b>'
+        f'<div class="q-board" data-count="{len(qs)}" data-lab="{html.escape(data["lab_id"])}">'
+        f'<span>Solved</span><b class="q-solved">0 / {len(qs)}</b>'
         f'<span class="q-bar"><i></i></span>'
-        f'<span class="q-solved">0 of {len(qs)} solved</span>'
         f'<button type="button" class="q-reset" title="Clear saved progress">Reset</button>'
         "</div>\n"
     )
@@ -81,9 +79,8 @@ def render(data, defaults_case_sensitive=False):
         if q["stage"] != stage:
             stage = q["stage"]
             n = sum(1 for x in qs if x["stage"] == stage)
-            pts = sum(x["points"] for x in qs if x["stage"] == stage)
             out.append(f"\n## {STAGES.get(stage, stage.title())} {{ #stage-{stage} }}\n")
-            out.append(f'<p class="q-src">{n} question{"s" if n != 1 else ""} &middot; {pts} points</p>\n')
+            out.append(f'<p class="q-src">{n} question{"s" if n != 1 else ""}</p>\n')
         ans = q["answer"]
         payload = dict(ans)
         payload.setdefault("case_sensitive", data.get("answer_defaults", {}).get("case_sensitive", defaults_case_sensitive))
@@ -92,12 +89,11 @@ def render(data, defaults_case_sensitive=False):
         walk = f"[Walkthrough]({chapter}#q{q['id']})" if chapter else ""
         sources = ", ".join(q.get("evidence", {}).get("sources", []))
         out.append(
-            f'\n<div class="q-card" id="q{q["id"]}" data-qid="{q["id"]}" data-points="{q["points"]}" markdown>\n'
+            f'\n<div class="q-card" id="q{q["id"]}" data-qid="{q["id"]}" markdown>\n'
             f'<div class="q-head"><span class="q-num">Q{q["id"]}</span>'
             f'<span class="q-title">{html.escape(q["title"])}</span>'
             f'<span class="q-meta"><span class="q-done">SOLVED</span>'
-            f'<span class="q-pill {q["difficulty"]}">{q["difficulty"]}</span>'
-            f'<span class="q-pts">{q["points"]} pts</span></span></div>\n'
+            f'<span class="q-pill {q["difficulty"]}">{q["difficulty"]}</span></span></div>\n'
             f'<p class="q-prompt">{html.escape(q["prompt"])}</p>\n'
             f'<form class="q-check" data-answer="{attr}" autocomplete="off">'
             f'<input type="text" spellcheck="false" placeholder="{html.escape(_input_hint(ans))}" aria-label="Answer for Q{q["id"]}">'
