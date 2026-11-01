@@ -46,6 +46,7 @@ theme:
 hooks:
   - hooks/bql.py
   - hooks/questions.py
+  - hooks/figures.py
 
 plugins:
   - search

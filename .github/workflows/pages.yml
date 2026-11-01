@@ -7,6 +7,7 @@ on:
       - "guide/**"
       - "hooks/**"
       - "labs/*/questions.json"
+      - "labs/*/figures/**"
       - "mkdocs.yml"
       - ".github/workflows/pages.yml"
   # Build on the PR too so a broken link fails review, not the deploy.
@@ -17,6 +18,7 @@ on:
       - "guide/**"
       - "hooks/**"
       - "labs/*/questions.json"
+      - "labs/*/figures/**"
       - "mkdocs.yml"
       - ".github/workflows/pages.yml"
   workflow_dispatch:

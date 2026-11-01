@@ -29,6 +29,8 @@ That's a hidden download command pasted into the Run box. It's what a fake "veri
 !!! finding "Finding · Q003"
     The technique is **ClickFix** (ATT&CK [T1204.004](https://attack.mitre.org/techniques/T1204/004/), Malicious Copy and Paste).
 
+<!-- figure: labs/001/figures/clickfix.html | How ClickFix works, and what each step leaves in the logs. -->
+
 The other two entries, at 14:22 and 14:51, come later. [Chapter 4](04-hands-on-keyboard.md) covers them.
 
 ## What did it download? <span class="q-ref">Q004</span> { #q004 }
