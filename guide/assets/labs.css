@@ -546,3 +546,44 @@ body { background: var(--lb-bg); }
   padding-right: 3.2rem;
 }
 .md-typeset .highlight pre > code { padding-right: 3.2rem; }
+
+/* Explanatory figures (hooks/figures.py) */
+.md-typeset figure.lb-fig { display: block; max-width: 100%; text-align: left; margin: 1.6em 0 2em; padding: 1rem 1.2rem; border: 1px solid var(--lb-border); border-radius: var(--lb-radius); background: var(--lb-surface); }
+.md-typeset figure.lb-fig figcaption { max-width: none; margin: 0.9rem 0 0; text-align: left; font-size: 0.7rem; font-style: normal; color: var(--lb-muted); }
+
+/* ClickFix steps */
+.md-typeset ol.lb-flow { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; margin: 0; padding: 0; list-style: none; counter-reset: none; }
+.md-typeset ol.lb-flow > li { margin: 0; display: flex; flex-direction: column; }
+.md-typeset .lb-flow b { font-size: 0.78rem; color: var(--lb-strong); }
+.md-typeset .lb-flow p { margin: 0.3rem 0 0; font-size: 0.72rem; line-height: 1.5; color: var(--lb-text); }
+.md-typeset .lb-flow p.lb-flow-log { margin-top: auto; padding-top: 0.7rem; border-top: 1px dashed var(--lb-border); color: var(--lb-muted); }
+.md-typeset .lb-flow p.lb-flow-log:not(:first-child) { margin-top: 0.8rem; }
+.md-typeset .lb-flow-log span { display: block; margin-bottom: 0.2rem; font: 600 0.62rem var(--md-code-font-family); color: var(--lb-dim); }
+.md-typeset .lb-flow kbd { font-size: 0.66rem; }
+.md-typeset .lb-flow-art { display: block; width: 100%; max-width: 9rem; height: auto; margin: 0 0 0.6rem; }
+.lb-flow-art .frame, .lb-flow-art .soft, .lb-flow-art .prompt, .lb-flow-art .amber { fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+.lb-flow-art .frame { stroke: var(--lb-muted); }
+.lb-flow-art rect.frame { fill: var(--lb-bg); }
+.lb-flow-art .soft { stroke: var(--lb-border); }
+.lb-flow-art .dot { fill: var(--lb-border); }
+.lb-flow-art .term { fill: #1b1238; }
+.lb-flow-art .prompt { stroke: #b794f6; }
+.lb-flow-art .amber { stroke: var(--lb-alert); stroke-width: 3; }
+.lb-flow-art .dash { stroke-width: 2; stroke-dasharray: 4 4; }
+@media (max-width: 44.9em) {
+  .md-typeset ol.lb-flow { grid-template-columns: 1fr; gap: 1.4rem; }
+  .md-typeset .lb-flow-art { max-width: 7rem; }
+}
+
+/* Beacon timeline */
+.md-typeset .lb-beacon-row { margin: 0 0 1rem; }
+.md-typeset .lb-beacon-label b { display: block; font: 600 0.72rem var(--md-code-font-family); color: var(--lb-strong); }
+.md-typeset .lb-beacon-label span { display: block; font-size: 0.66rem; color: var(--lb-muted); }
+.md-typeset .lb-beacon svg { display: block; width: 100%; height: 2.6rem; margin-top: 0.4rem; overflow: visible; }
+.lb-beacon svg .base { stroke: var(--lb-border); stroke-width: 1; vector-effect: non-scaling-stroke; }
+.lb-beacon svg .mark { stroke: var(--lb-accent); stroke-width: 2; vector-effect: non-scaling-stroke; }
+.lb-beacon .is-c2 svg .mark { stroke: var(--lb-alert); }
+.lb-beacon svg .hit { stroke: transparent; stroke-width: 10; vector-effect: non-scaling-stroke; pointer-events: stroke; }
+.lb-beacon svg g:hover .mark { stroke-width: 3.5; }
+@media (max-width: 44.9em) { .lb-beacon svg .mark { stroke-width: 1.25; } }
+.md-typeset .lb-beacon-axis { display: flex; justify-content: space-between; font: 0.62rem var(--md-code-font-family); color: var(--lb-dim); }

@@ -1,0 +1,20 @@
+<ol class="lb-flow">
+<li>
+<svg class="lb-flow-art" viewBox="0 0 120 72" aria-hidden="true"><rect class="frame" x="4" y="6" width="84" height="60" rx="5"/><line class="frame" x1="4" y1="18" x2="88" y2="18"/><circle class="dot" cx="12" cy="12" r="2"/><circle class="dot" cx="19" cy="12" r="2"/><circle class="dot" cx="26" cy="12" r="2"/><rect class="frame" x="16" y="32" width="12" height="12" rx="2"/><path class="frame" d="M19 38l2.5 2.5 4.5-5"/><line class="soft" x1="34" y1="35" x2="72" y2="35"/><line class="soft" x1="34" y1="41" x2="62" y2="41"/><rect class="frame" x="96" y="26" width="20" height="28" rx="3"/><rect class="frame" x="101" y="22" width="10" height="7" rx="2"/><line class="amber" x1="100" y1="38" x2="112" y2="38"/><path class="amber dash" d="M60 52 C 76 58, 90 52, 98 44"/></svg>
+<b>1. A fake check copies a command</b>
+<p>A page asks you to "verify you are human" or fix an error. It has already put a command on your clipboard.</p>
+<p class="lb-flow-log"><span>In the logs</span>DNS or proxy logs show the visit. The copy itself usually isn't logged (Sysmon event 24 can, but it's rarely on).</p>
+</li>
+<li>
+<svg class="lb-flow-art" viewBox="0 0 120 72" aria-hidden="true"><rect class="frame" x="10" y="8" width="100" height="56" rx="5"/><line class="frame" x1="10" y1="20" x2="110" y2="20"/><line class="soft" x1="18" y1="14" x2="40" y2="14"/><rect class="frame" x="18" y="28" width="84" height="12" rx="2"/><line class="amber" x1="23" y1="34" x2="80" y2="34"/><rect class="frame" x="70" y="48" width="32" height="10" rx="2"/></svg>
+<b>2. You paste it into Run</b>
+<p>The page tells you to press <kbd>Win</kbd>+<kbd>R</kbd>, <kbd>Ctrl</kbd>+<kbd>V</kbd>, <kbd>Enter</kbd>. That pastes the command into the Run dialog and starts it.</p>
+<p class="lb-flow-log"><span>In the logs</span><code>Sysmon 13</code> Explorer writes the command to the <code>RunMRU</code> registry key.</p>
+</li>
+<li>
+<svg class="lb-flow-art" viewBox="0 0 120 72" aria-hidden="true"><rect class="term" x="6" y="8" width="86" height="56" rx="5"/><path class="prompt" d="M14 24l5 4-5 4"/><line class="amber" x1="24" y1="28" x2="76" y2="28"/><line class="prompt" x1="14" y1="40" x2="50" y2="40"/><line class="prompt" x1="14" y1="50" x2="40" y2="50"/><path class="amber dash" d="M92 30 C 100 30, 104 24, 108 18"/><path class="frame" d="M104 46v14m-5-5l5 5 5-5"/></svg>
+<b>3. The command runs as you</b>
+<p>Often it's PowerShell in a hidden window. It downloads the next stage and starts it.</p>
+<p class="lb-flow-log"><span>In the logs</span><code>Sysmon 1</code> <code>explorer.exe</code> starts <code>powershell.exe</code>. <code>Sysmon 22</code> PowerShell looks up the download domain.</p>
+</li>
+</ol>

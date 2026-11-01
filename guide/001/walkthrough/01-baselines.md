@@ -34,7 +34,11 @@ It has RustDesk and PAExec (which LOLRMM lists as a PsExec clone), both new on O
 
 ## What's talking on a timer?
 
-Malware usually calls home on a timer, and people don't. The `outbound_beacons` model scores every internal to external pair by how regular its timing and sizes are.
+Malware usually calls home on a timer, and people don't. That regular check-in is called a **beacon**. Attackers add **jitter**, a few seconds of random wobble, but the rhythm still shows. Here is one hour on WS02:
+
+<!-- beacon: labs/001/figures/beacon-hour.tsv | One hour on WS02, Oct 30, 2026 (UTC). Each tick is one connection, and taller ticks sent more bytes. The C2 checks in about every 30 seconds, always with nearly the same size. People's traffic comes in bursts. -->
+
+The `outbound_beacons` model scores every internal to external pair by how regular its timing and sizes are.
 
 Network models score a rolling window that ends now, and they can't be backfilled, so the model's page stays empty for a dataset from the past. Score the lab on demand instead: open the model, click **Edit**, open the **Scores** tab, and pick a window that reaches back to Oct 27, 2026 (**Last 30 Days** while the lab is recent).
 
