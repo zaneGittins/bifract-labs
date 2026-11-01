@@ -155,20 +155,18 @@
     if (!board || board.dataset.ready) return;
     board.dataset.ready = "1";
     var lab = board.getAttribute("data-lab");
-    var total = +board.getAttribute("data-total");
     var count = +board.getAttribute("data-count");
     var solved = loadSolved(lab);
 
     function paint() {
-      var pts = 0, n = 0;
+      var n = 0;
       document.querySelectorAll(".q-card").forEach(function (card) {
         var on = !!solved[card.getAttribute("data-qid")];
         card.classList.toggle("is-solved", on);
-        if (on) { pts += +card.getAttribute("data-points"); n++; }
+        if (on) n++;
       });
-      board.querySelector(".q-score").textContent = pts + " / " + total;
-      board.querySelector(".q-solved").textContent = n + " of " + count + " solved";
-      board.querySelector(".q-bar i").style.width = (total ? (100 * pts / total) : 0) + "%";
+      board.querySelector(".q-solved").textContent = n + " / " + count;
+      board.querySelector(".q-bar i").style.width = (count ? (100 * n / count) : 0) + "%";
     }
 
     document.querySelectorAll(".q-card .q-check").forEach(function (form) {
@@ -201,10 +199,30 @@
     paint();
   }
 
+  // Keep the question board flush under the header once it sticks, so no
+  // page content shows between them. The header's height varies by width.
+  function dockBoard() {
+    var board = document.querySelector(".q-board");
+    var header = document.querySelector(".md-header");
+    if (!board || !header) return;
+    var top = header.getBoundingClientRect().bottom;
+    board.style.top = top + "px";
+    board.classList.toggle("is-stuck", board.getBoundingClientRect().top <= top + 0.5);
+  }
+  var docking = false;
+  function queueDock() {
+    if (docking) return;
+    docking = true;
+    window.requestAnimationFrame(function () { docking = false; dockBoard(); });
+  }
+  window.addEventListener("scroll", queueDock, { passive: true });
+  window.addEventListener("resize", queueDock);
+
   function init() {
     addOpenLinks();
     instanceSettings();
     questions();
+    dockBoard();
   }
 
   if (window.document$ && typeof window.document$.subscribe === "function") {

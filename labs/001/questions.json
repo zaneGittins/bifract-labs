@@ -1,12 +1,11 @@
 {
   "schema_version": "1.0",
-  "id": "bifract-labs-001-ctf",
+  "id": "bifract-labs-001-questions",
   "lab_id": "001",
   "title": "Meridian Workstation Intrusion",
   "description": "Investigate a fake remote-support incident from initial access through persistence and lateral movement.",
   "dataset": "bifract-labs-001.jsonl.zst",
   "time_zone": "UTC",
-  "total_points": 2500,
   "answer_defaults": {
     "case_sensitive": false,
     "trim_whitespace": true,
@@ -19,7 +18,6 @@
       "stage": "triage",
       "title": "First host",
       "difficulty": "easy",
-      "points": 50,
       "prompt": "Which workstation was compromised first?",
       "answer": {
         "type": "string",
@@ -37,7 +35,6 @@
       "stage": "triage",
       "title": "First user",
       "difficulty": "easy",
-      "points": 50,
       "prompt": "Which domain user ran the first suspicious process tree?",
       "answer": {
         "type": "string",
@@ -55,7 +52,6 @@
       "stage": "initial-access",
       "title": "Initial access",
       "difficulty": "easy",
-      "points": 75,
       "prompt": "What social engineering technique got the user to paste and run the first command?",
       "answer": {
         "type": "string",
@@ -73,7 +69,6 @@
       "stage": "initial-access",
       "title": "Download",
       "difficulty": "medium",
-      "points": 75,
       "prompt": "Which command interpreter did Explorer start to download and unpack the first bundle?",
       "answer": {
         "type": "string",
@@ -91,7 +86,6 @@
       "stage": "loader-analysis",
       "title": "Loader file name",
       "difficulty": "medium",
-      "points": 75,
       "prompt": "What file name did the loader run under on disk?",
       "answer": {
         "type": "string",
@@ -109,7 +103,6 @@
       "stage": "loader-analysis",
       "title": "Loader identity",
       "difficulty": "medium",
-      "points": 75,
       "prompt": "What original file name is embedded in that executable?",
       "answer": {
         "type": "string",
@@ -127,7 +120,6 @@
       "stage": "loader-analysis",
       "title": "Path configuration",
       "difficulty": "hard",
-      "points": 100,
       "prompt": "What Python path configuration file was placed next to the loader?",
       "answer": {
         "type": "string",
@@ -145,7 +137,6 @@
       "stage": "loader-analysis",
       "title": "Startup code",
       "difficulty": "hard",
-      "points": 100,
       "prompt": "Which archive file supplied the loader's startup code?",
       "answer": {
         "type": "string",
@@ -163,7 +154,6 @@
       "stage": "loader-analysis",
       "title": "First payload",
       "difficulty": "medium",
-      "points": 75,
       "prompt": "What executable did the loader start first?",
       "answer": {
         "type": "string",
@@ -181,7 +171,6 @@
       "stage": "discovery",
       "title": "Discovery",
       "difficulty": "medium",
-      "points": 75,
       "prompt": "Which two built-in Windows programs were run over and over to collect user and network details?",
       "answer": {
         "type": "set",
@@ -202,7 +191,6 @@
       "stage": "discovery",
       "title": "System inventory",
       "difficulty": "hard",
-      "points": 100,
       "prompt": "Which parent and child pair collected operating system details? Submit them in order, parent first.",
       "answer": {
         "type": "ordered_list",
@@ -224,7 +212,6 @@
       "stage": "remote-access",
       "title": "Remote support tool",
       "difficulty": "medium",
-      "points": 75,
       "prompt": "Which remote support tool was deployed under the same support-themed file name?",
       "answer": {
         "type": "string",
@@ -242,7 +229,6 @@
       "stage": "remote-access",
       "title": "Typed command",
       "difficulty": "hard",
-      "points": 100,
       "prompt": "What command line did the attacker type to open a shell?",
       "answer": {
         "type": "string",
@@ -263,7 +249,6 @@
       "stage": "persistence",
       "title": "Trusted process",
       "difficulty": "hard",
-      "points": 100,
       "prompt": "Which legitimate program loaded a DLL from the user profile, started discovery commands and made an outbound connection?",
       "answer": {
         "type": "string",
@@ -281,7 +266,6 @@
       "stage": "persistence",
       "title": "Persistence",
       "difficulty": "medium",
-      "points": 100,
       "prompt": "What registry value was added for persistence? Submit the key path with the value name, starting with HKCU.",
       "answer": {
         "type": "string",
@@ -304,7 +288,6 @@
       "stage": "persistence",
       "title": "Plugin DLLs",
       "difficulty": "hard",
-      "points": 100,
       "prompt": "Which two DLLs were staged in the user-writable plugin folder?",
       "answer": {
         "type": "set",
@@ -321,7 +304,6 @@
       "stage": "credential-access",
       "title": "Sprayed password",
       "difficulty": "medium",
-      "points": 75,
       "prompt": "What password was tried against several domain accounts? (case sensitive)",
       "answer": {
         "type": "string",
@@ -340,7 +322,6 @@
       "stage": "credential-access",
       "title": "Rejected users",
       "difficulty": "medium",
-      "points": 75,
       "prompt": "Which two regular user accounts rejected the sprayed password?",
       "answer": {
         "type": "set",
@@ -361,7 +342,6 @@
       "stage": "credential-access",
       "title": "Rejected admin",
       "difficulty": "medium",
-      "points": 75,
       "prompt": "Which admin-named account also rejected the sprayed password?",
       "answer": {
         "type": "string",
@@ -379,7 +359,6 @@
       "stage": "credential-access",
       "title": "Working credential",
       "difficulty": "medium",
-      "points": 75,
       "prompt": "Which account accepted the sprayed password?",
       "answer": {
         "type": "string",
@@ -397,7 +376,6 @@
       "stage": "lateral-movement",
       "title": "Second host",
       "difficulty": "easy",
-      "points": 50,
       "prompt": "Which workstation did the attacker move to?",
       "answer": {
         "type": "string",
@@ -415,7 +393,6 @@
       "stage": "lateral-movement",
       "title": "Movement tool",
       "difficulty": "medium",
-      "points": 75,
       "prompt": "Which remote service execution tool did the attacker use to move?",
       "answer": {
         "type": "string",
@@ -433,7 +410,6 @@
       "stage": "lateral-movement",
       "title": "Admin shares",
       "difficulty": "medium",
-      "points": 100,
       "prompt": "Which two admin shares were used, one to test credentials and one to stage the payload?",
       "answer": {
         "type": "set",
@@ -450,7 +426,6 @@
       "stage": "lateral-movement",
       "title": "Service name",
       "difficulty": "hard",
-      "points": 100,
       "prompt": "What service name was installed on the target?",
       "answer": {
         "type": "string",
@@ -468,7 +443,6 @@
       "stage": "lateral-movement",
       "title": "Payload account",
       "difficulty": "easy",
-      "points": 50,
       "prompt": "Which account did the payload run as on the second workstation?",
       "answer": {
         "type": "string",
@@ -486,7 +460,6 @@
       "stage": "infrastructure",
       "title": "Attacker domains",
       "difficulty": "medium",
-      "points": 100,
       "prompt": "Which two attacker domains appear in the intrusion?",
       "answer": {
         "type": "set",
@@ -503,7 +476,6 @@
       "stage": "infrastructure",
       "title": "Domain to IP",
       "difficulty": "medium",
-      "points": 100,
       "prompt": "Which IP address did each attacker domain resolve to?",
       "answer": {
         "type": "mapping",
@@ -523,7 +495,6 @@
       "stage": "infrastructure",
       "title": "Implant port",
       "difficulty": "medium",
-      "points": 75,
       "prompt": "Which destination port did the implant use for command and control?",
       "answer": {
         "type": "string",
@@ -541,7 +512,6 @@
       "stage": "infrastructure",
       "title": "Remote support ports",
       "difficulty": "hard",
-      "points": 100,
       "prompt": "Which two destination ports carried the remote support tool's signaling and relay traffic?",
       "answer": {
         "type": "set",
@@ -562,7 +532,6 @@
       "stage": "infrastructure",
       "title": "Extra remote support port",
       "difficulty": "medium",
-      "points": 50,
       "prompt": "Which other destination port did the remote support tool connect to successfully?",
       "answer": {
         "type": "string",
@@ -580,7 +549,6 @@
       "stage": "scope",
       "title": "Callbacks",
       "difficulty": "medium",
-      "points": 75,
       "prompt": "Which two workstations called back to the implant's server?",
       "answer": {
         "type": "set",

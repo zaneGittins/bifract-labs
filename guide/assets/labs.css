@@ -383,7 +383,7 @@ body { background: var(--lb-bg); }
 /* Questions */
 .md-typeset .q-board {
   position: sticky;
-  top: 3.2rem;
+  top: 2.4rem; /* labs.js sets the header's exact height */
   z-index: 3;
   display: flex;
   align-items: center;
@@ -395,13 +395,17 @@ body { background: var(--lb-bg); }
   background: color-mix(in srgb, var(--lb-surface) 92%, transparent);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
+  transition: border-radius 0.15s ease;
+}
+/* Docked under the header: square top, no top border, solid so nothing shows through. */
+.md-typeset .q-board.is-stuck {
+  border-top-color: transparent;
+  border-radius: 0 0 var(--lb-radius) var(--lb-radius);
+  background: var(--lb-surface);
+  box-shadow: var(--lb-shadow);
 }
 .md-typeset .q-board b { font-size: 1rem; color: var(--lb-strong); font-variant-numeric: tabular-nums; }
-.md-typeset .q-board b, .md-typeset .q-board .q-solved { white-space: nowrap; }
-@media (max-width: 44.9em) {
-  .md-typeset .q-board { flex-wrap: wrap; row-gap: 0.5rem; }
-  .md-typeset .q-board .q-bar { order: 5; flex-basis: 100%; }
-}
+.md-typeset .q-board b { white-space: nowrap; }
 .md-typeset .q-board .q-bar { flex: 1; height: 6px; border-radius: 99px; background: var(--lb-surface-2); overflow: hidden; }
 .md-typeset .q-board .q-bar i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--lb-accent), var(--lb-accent-2)); transition: width 0.3s ease; }
 .md-typeset .q-board button { font-size: 0.64rem; color: var(--lb-dim); cursor: pointer; }
@@ -436,7 +440,6 @@ body { background: var(--lb-bg); }
 .md-typeset .q-pill.easy { color: var(--lb-good); background: var(--lb-good-soft); }
 .md-typeset .q-pill.medium { color: var(--lb-accent-2); background: var(--lb-accent-soft); }
 .md-typeset .q-pill.hard { color: var(--lb-warn); background: var(--lb-warn-soft); }
-.md-typeset .q-pts { font: 600 0.64rem var(--md-code-font-family); color: var(--lb-dim); }
 .md-typeset .q-done { display: none; color: var(--lb-good); font: 700 0.62rem var(--md-code-font-family); letter-spacing: 0.06em; }
 .md-typeset .q-card.is-solved .q-done { display: inline; }
 .md-typeset .q-prompt { margin: 0.45rem 0 0.7rem; font-size: 0.82rem; color: var(--lb-text); }
