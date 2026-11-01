@@ -2,8 +2,6 @@
 title: "Lab 001 walkthrough"
 ---
 
-<p class="lb-kicker">Lab 001 · Walkthrough</p>
-
 # Walkthrough
 
 <p class="lb-lede">This is how I'd work the intrusion, from no alert at all to a full timeline. Every question in the question set is answered along the way, tagged like <span class="q-ref" style="margin:0">Q001</span>.</p>

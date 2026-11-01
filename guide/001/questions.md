@@ -2,8 +2,6 @@
 title: "Lab 001 questions"
 ---
 
-<p class="lb-kicker">Lab 001 · Question set</p>
-
 # Questions
 
 Hunt on your own and check your answers as you go. Your progress is only saved in this browser. Each question has a hint, the answer, and a link to the part of the walkthrough that covers it.

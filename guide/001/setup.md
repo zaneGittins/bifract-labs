@@ -2,8 +2,6 @@
 title: "Lab 001 setup"
 ---
 
-<p class="lb-kicker">Lab 001 · Setup</p>
-
 # Set up the lab
 
 <p class="lb-lede">Load the logs, add four models, and you're ready.</p>
