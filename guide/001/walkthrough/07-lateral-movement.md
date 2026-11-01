@@ -24,6 +24,17 @@ All 15 logons are network logons on WS03, from `10.1.10.22` (WS02).
 
 The account is used against WS03 again on Oct 30 (01:28 and 11:08), so the attacker kept that access.
 
+### Optional: see it as a graph
+
+Workstations talk SMB to the domain controller all day, for group policy and logon scripts. They rarely talk SMB to each other. `mesh()` draws every source and destination pair as a network, so the odd link stands out:
+
+```bql
+channel="conn" dst_port="445" cidr(src_ip, "10.1.10.0/24") cidr(dst_ip, "10.1.10.0/24") | groupBy(src_ip, dst_ip) | mesh(src=src_ip, dst=dst_ip)
+```
+<!-- shot: q021-mesh | Internal SMB: every workstation to DC01, plus one link from WS02 to WS03. | graph wait=4000 -->
+
+Each workstation (`.21`, `.22`, `.23`) connects to DC01 (`.10`) about 320 times. The only other line is `10.1.10.22` to `10.1.10.23`, WS02 to WS03, with 3 connections.
+
 ## The tool <span class="q-ref">Q022</span> { #q022 }
 
 Search for any command that names WS03 as a UNC path (`\\WS03`). In BQL that takes four backslashes:
