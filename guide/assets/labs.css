@@ -288,23 +288,36 @@ body { background: var(--lb-bg); }
 .md-typeset .lb-band .md-button { margin: 0.6rem 0.5rem 0 0; color: var(--band-strong); border-color: rgba(233, 227, 247, 0.35); }
 .md-typeset .lb-band .md-button--primary { background: var(--band-button); border-color: var(--band-button); }
 .md-typeset .lb-band .md-button:hover { background: var(--lb-accent-2); border-color: var(--lb-accent-2); }
-/* md_in_html wraps the svg in a <p>; let it position against the band instead */
-.md-typeset .lb-band p:has(> .lb-mark) { position: static; margin: 0; }
-.md-typeset .lb-band .lb-mark {
+/* md_in_html wraps the image in a <p>; let it position against the band instead */
+.md-typeset .lb-band p:has(> .lb-art) { position: static; margin: 0; }
+.md-typeset .lb-band .lb-art {
   position: absolute;
   top: 50%;
-  right: 2.5rem;
-  width: 15rem;
-  height: 15rem;
-  transform: translateY(-50%) rotate(-8deg);
-  color: var(--band-mark);
-  opacity: 0.75;
+  right: 1.2rem;
+  width: 17rem;
+  height: auto;
+  transform: translateY(-50%);
+}
+@media (max-width: 59.9em) {
+  .md-typeset .lb-band .lb-art { position: static; display: block; width: 13rem; margin: 1.6rem auto 0; transform: none; }
 }
 @media (max-width: 44.9em) {
   .md-typeset .lb-band { padding: 2rem 1.3rem 1.8rem; }
   .md-typeset .lb-band h1 { font-size: 1.9rem; }
-  .md-typeset .lb-band .lb-mark { top: auto; bottom: -5rem; right: -5rem; width: 12rem; height: 12rem; transform: rotate(-8deg); opacity: 0.3; }
 }
+
+/* Illustrations */
+.md-typeset .lb-lab { overflow: hidden; }
+.md-typeset .lb-lab > p:has(> .lb-cover) { grid-column: 1 / -1; margin: -1.6rem -1.7rem 0; }
+.md-typeset img.lb-cover { display: block; width: 100%; height: auto; aspect-ratio: 14 / 5; object-fit: cover; object-position: 70% 100%; }
+.md-typeset p:has(> .lb-cover--page) { margin: 0 0 1.4rem; }
+.md-typeset img.lb-cover--page { border: 1px solid var(--lb-border-soft); border-radius: var(--lb-radius); }
+@media (max-width: 44.9em) {
+  .md-typeset img.lb-cover { aspect-ratio: 2 / 1; object-position: 68% 100%; }
+}
+.md-typeset p:has(> .lb-spot) { margin: 0; }
+.md-typeset img.lb-spot { float: right; width: 8rem; height: auto; margin: -0.6rem 0 0.4rem 1.2rem; }
+@media (max-width: 44.9em) { .md-typeset img.lb-spot { width: 5.5rem; margin-left: 0.8rem; } }
 
 .md-typeset .md-button {
   border-radius: 8px;
@@ -381,6 +394,7 @@ body { background: var(--lb-bg); }
 
 /* Questions */
 .md-typeset .q-board {
+  clear: both;
   position: sticky;
   top: 2.4rem; /* labs.js sets the header's exact height */
   z-index: 3;
