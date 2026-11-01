@@ -102,4 +102,23 @@ Use the **‹ ›** arrows next to **N rare** to step through the processes with
 !!! info "Raise the limit"
     RustDesk starts `cmd.exe` about 48,000 times. At the default `limit`, those repeats can crowd out file and network actions, so this query raises it to 3000.
 
+## Optional: does it look like a known C2?
+
+`QuickConnect.Service.exe` isn't signed, and its SHA-256 won't be in any list. C2 frameworks build a fresh implant for every operator. **TLSH** is a fuzzy hash you compare by distance, so two builds of the same malware land close together even when their exact hashes have nothing in common. Zero means identical, and the number climbs as files diverge. Distances from 10 to 50 still mean quite similar, and that range is where the value is, because those are the files an exact hash would have missed completely.
+
+In this lab, Velociraptor's `Windows.EventLogs.SysmonProcessEnriched` artifact staples a TLSH digest (`tlsh`) and a signing status (`trusted`) onto Sysmon process events. 245 process starts have a digest. ([Fuzzy Hash Hunting with Velociraptor and Bifract](https://signalsleuth.io/2026/09/11/tlsh.html) shows how to collect them in your own environment.) To compare them with public attack tools:
+
+1. In **Exchange**, open **CelesTLSH fuzzy hash hunting**, click **Add all** and confirm. That adds Magonia Research's [CelesTLSH](https://github.com/Magonia-Research/CelesTLSH-Hashes) list of attack tool digests and a `tlsh_index` model.
+2. Open `tlsh_index` and **Backfill** from **Oct 27, 2026** to **Nov 1, 2026**.
+
+```bql
+event_id="1" tlsh=* | tlsh(field=tlsh, dict="celes_tlsh", threshold=50) | match(dict="celes_tlsh", field=tlsh_match, column=TLSH_Hash, include=[Repo_Name]) | table(timestamp, computer_name, image, tlsh_distance, Repo_Name)
+```
+<!-- shot: q009-tlsh | The only program within 50 of a public attack tool. | rows=1 -->
+
+Of the 245 process starts, only the implant comes within 50 of a known attack tool. Its closest match is Merlin, an open source C2 written in Go, at a distance of 44. That doesn't make it Merlin. It's a Sliver implant, and the list holds released Sliver servers and clients rather than implants, so the closest Sliver build is 63 away. What TLSH tells you is that this binary looks a lot like a Go C2 framework, which is reason enough to dig in.
+
+!!! info "The bundle's alert stays quiet here"
+    The bundle also adds an alert, **Untrusted Binary Similar to an Attack Tool**, which only checks unsigned programs. It reads the signing status from a field named `authenticode_trusted`, but this lab stores it as `trusted`, so the alert never matches. Add `trusted="untrusted"` to the search above and you get the same single row: the implant is also the only unsigned program with a digest. A close match on a program that also isn't signed is a much stronger signal than either one on its own.
+
 Next: [the attacker's hands on the keyboard](04-hands-on-keyboard.md).
