@@ -2,6 +2,8 @@
 title: "Lab 001: Meridian workstation intrusion"
 ---
 
+![](../assets/art/lab-001-cover.webp){ .lb-cover .lb-cover--page .no-zoom width="1600" height="640" }
+
 <p class="lb-kicker">Lab 001</p>
 
 # Meridian workstation intrusion
