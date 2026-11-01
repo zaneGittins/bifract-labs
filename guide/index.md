@@ -11,7 +11,7 @@ hide:
 
 # Bifract Labs
 
-Labs for [Bifract](https://github.com/zaneGittins/bifract). Each lab is a log dataset with an intrusion in it. Follow the walkthrough step by step, or hunt on your own and check your answers.
+Labs for [Bifract](https://github.com/zaneGittins/bifract). Each lab is a dataset, questions, and a lab guide. Import it into your Bifract from the [Exchange](https://docs.bifract.io/exchange/), or run it in a free [GitHub Codespace](001/setup.md#no-bifract-yet-use-codespaces).
 
 [Start lab 001](001/index.md){ .md-button .md-button--primary }
 [Get Bifract](https://docs.bifract.io/getting-started/installation/){ .md-button }
@@ -36,7 +36,5 @@ A user pastes a command they were told to run, and an attacker takes it from the
 [Open lab](001/index.md){ .md-button .md-button--primary }
 </div>
 </div>
-
-No Bifract yet? You can run lab 001 in [Codespaces](001/setup.md#no-bifract-yet-use-codespaces) with nothing to install.
 
 </div>
