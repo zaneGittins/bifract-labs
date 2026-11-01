@@ -92,7 +92,7 @@ def render(data, defaults_case_sensitive=False):
             f'\n<div class="q-card" id="q{q["id"]}" data-qid="{q["id"]}" markdown>\n'
             f'<div class="q-head"><span class="q-num">Q{q["id"]}</span>'
             f'<span class="q-title">{html.escape(q["title"])}</span>'
-            f'<span class="q-meta"><span class="q-done">SOLVED</span>'
+            f'<span class="q-meta"><span class="q-done">Solved</span>'
             f'<span class="q-pill {q["difficulty"]}">{q["difficulty"]}</span></span></div>\n'
             f'<p class="q-prompt">{html.escape(q["prompt"])}</p>\n'
             f'<form class="q-check" data-answer="{attr}" autocomplete="off">'

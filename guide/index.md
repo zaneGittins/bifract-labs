@@ -28,9 +28,7 @@ Labs for [Bifract](https://github.com/zaneGittins/bifract). Each lab is a datase
 
 A user pastes a command they were told to run, and an attacker takes it from there.
 
-<ul class="lb-tags">
-<li>Sysmon</li><li>Windows events</li><li>Zeek</li><li>2.08M events</li><li>5 hosts</li><li>31 questions</li>
-</ul>
+<p class="lb-facts">Sysmon · Windows events · Zeek · 2.08M events · 5 hosts · 31 questions</p>
 </div>
 <div class="lb-cta" markdown>
 [Open lab](001/index.md){ .md-button .md-button--primary }
