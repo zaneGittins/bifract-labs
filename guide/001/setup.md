@@ -39,7 +39,7 @@ With the `bifract-labs-001` fractal selected:
 3. **Backfill two of them.** Open `rmm_users`, click **Backfill**, pick **Custom range** from **Oct 27, 2026** to **Nov 1, 2026**, and start it. Do the same for `remote_tools_first_seen`.
 4. **Score the network models.** Open `outbound_beacons` and click **Score range**. If you added the lab from the Exchange, the range is already filled in. Otherwise enter **2026-10-27 00:00** to **2026-10-31 00:00**. Click **Score range** again. Do the same for `outbound_long_connections`.
 
-Backfilled models show **Stale** and network models show **Learning**. That's expected for a dataset from the past.
+On the models list, backfilled models show **Stale** and network models show **Scored** with the end of the range. That's expected for a dataset from the past.
 
 ## Start hunting
 
