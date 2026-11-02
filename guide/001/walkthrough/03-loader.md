@@ -93,14 +93,13 @@ ptg(start="9D045BEA-5269-6AE3-CC3D-000000001100", direction=forward, depth=1)
 `pgr()` goes further than `ptg()`. It rebuilds the process tree, scores each file, network and DNS action by how rare it is on other hosts, and hides the everyday noise. Start it on the loader and draw it with `pgraph()`:
 
 ```bql
-pgr(start="9D045BEA-5269-6AE3-CC3D-000000001100", limit=3000) | pgraph()
+pgr(start="9D045BEA-5269-6AE3-CC3D-000000001100") | pgraph()
 ```
 <!-- shot: q009-pgr | The provenance graph from the loader. Red marks actions rare across the fleet. | graph wait=9000 -->
 
-Use the **‹ ›** arrows next to **N rare** to step through the processes with rare activity. Most of the next four chapters are in this graph: discovery commands, the renamed RustDesk, a registry Run key, a `net use` loop, and PAExec reaching WS03.
+Use the **‹ ›** arrows next to **N rare** to step through the processes with rare activity. Most of the next four chapters are in this graph: discovery commands, the renamed RustDesk, a registry Run key, a `net use` loop, and PAExec reaching WS03. RustDesk alone starts `cmd.exe` about 48,000 times, and `pgr()` folds those repeats so they don't bury the rest.
 
-!!! info "Raise the limit"
-    RustDesk starts `cmd.exe` about 48,000 times. At the default `limit`, those repeats can crowd out file and network actions, so this query raises it to 3000.
+The red **2 hosts reached via 2 artifacts** badge marks other hosts that share something rare with this tree. One is real: on WS03, a copy of the implant talks to the same `203.0.113.87` ([chapter 7](07-lateral-movement.md)). The other is a false lead. WS01 also looks up `login.microsoftonline.com`, like any Windows host signing in to Microsoft, so check each lead before you trust it.
 
 ## Optional: does it look like a known C2?
 
