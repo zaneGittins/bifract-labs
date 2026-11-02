@@ -8,9 +8,11 @@ title: "Lab 001 setup"
 
 ## No Bifract yet? Use Codespaces
 
-[Open lab 001 in Codespaces](https://codespaces.new/zaneGittins/bifract-labs?quickstart=1){ .md-button .md-button--primary }
+[Open lab 001 in Codespaces](https://codespaces.new/zaneGittins/bifract?quickstart=1){ .md-button .md-button--primary }
 
-This runs Bifract on a GitHub cloud machine with lab 001 already imported. Sign in with the credentials printed in the Codespace terminal, then [add the models](#add-the-models). Codespaces usage counts against your GitHub account's free allowance, so stop it when you're done.
+This runs Bifract on a GitHub cloud machine with lab 001 loaded and endpoint analytics on, so skip to [add the models](#add-the-models). When the editor opens, `WELCOME.md` shows Bifract's address and admin password. Enter that address under [Start hunting](#start-hunting) so the guide's **Open in Bifract** buttons go to your Codespace.
+
+Codespaces usage counts against your GitHub account's free allowance, so stop it when you're done. See the [Codespaces guide](https://docs.bifract.io/getting-started/codespaces/) for more.
 
 ## Have Bifract? Add the dataset
 
