@@ -42,14 +42,14 @@ channel="dns" query=~"update-cache-m9tdco18phmc.com","support-assist-7wfncs.onli
 !!! finding "Finding · Q027"
     `update-cache-m9tdco18phmc.com` → **203.0.113.87** and `support-assist-7wfncs.online` → **192.0.2.146**.
 
-## The implant channel <span class="q-ref">Q028</span> { #q028 }
+## The C2 channel <span class="q-ref">Q028</span> { #q028 }
 
 ```bql
 event_id="3" dst_ip="203.0.113.87" | groupBy(hostname, image, dst_port) | sort(_count, order=desc)
 ```
 <!-- shot: q028-8888 | Everything that connected to 203.0.113.87, by port. | rows=5 -->
 
-Greenshot, the implant on both hosts, and two connections Sysmon attributes to `tasklist.exe` all go to port 8888. The single 443 connection is PowerShell downloading the bundle.
+Greenshot, the implant on both hosts, and two connections Sysmon attributes to `tasklist.exe` all go to port 8888. The single 443 connection is PowerShell downloading the payload archive.
 
 !!! finding "Finding · Q028"
     The implant's command and control port is **8888**.
@@ -58,7 +58,7 @@ Greenshot, the implant on both hosts, and two connections Sysmon attributes to `
 
 <a id="q030"></a>
 
-RustDesk uses a few ports on its server: **21116** for signaling (the client checks in and finds its peer), **21117** for the relay that carries the session, and **21115** for a NAT test at startup. Look at completed connections only:
+RustDesk uses a few ports on its server: **21116** for the rendezvous (ID) server, where the client registers and finds its peer, **21117** for the relay that carries the session, and **21115** for a NAT type test at startup. Look at completed connections only:
 
 ```bql
 channel="conn" dst_ip="192.0.2.146" conn_state="SF" | groupBy(dst_port, function=multi(count(), max(duration, as=longest), max(orig_bytes, as=max_out))) | sort(dst_port)
@@ -67,14 +67,14 @@ channel="conn" dst_ip="192.0.2.146" conn_state="SF" | groupBy(dst_port, function
 
 | Port | Connections | Profile |
 |---|---|---|
-| 21116 | 2,775 | Tiny, repeated check-ins: signaling |
+| 21116 | 2,775 | Tiny, repeated check-ins: rendezvous |
 | 21117 | 1 | One session, 84 minutes, 2.1 MB out: the relay carrying the remote desktop |
-| 21115 | 1 | 6 bytes at startup: the NAT test |
+| 21115 | 1 | 6 bytes at startup: the NAT type test |
 
 Zeek also shows thousands of unanswered attempts to 21114 (`S0`), which don't count.
 
 !!! finding "Finding · Q029"
-    Signaling and relay traffic used **21116** and **21117**.
+    Rendezvous and relay traffic used **21116** and **21117**.
 
 Sysmon confirms the full set of ports the RustDesk client reached:
 
@@ -97,8 +97,8 @@ event_id="3" dst_ip="203.0.113.87" dst_port="8888" | groupBy(hostname, user, ima
 
 WS02 (the implant, then Greenshot until Oct 30 13:22) and WS03 (the implant, as SYSTEM, at 15:29). Nothing from WS01 or DC01.
 
-!!! warning "DC01 isn't infected"
-    If you count DNS lookups of the C2 domain by source, DC01 looks infected too, with almost as many as WS02. It's the DNS server, so it forwards the workstations' lookups. Scope from endpoint logs instead of DNS sources.
+!!! warning "DC01 isn't compromised"
+    If you count DNS lookups of the C2 domain by source, DC01 looks compromised too, with almost as many as WS02. It's the DNS server, so it forwards the workstations' lookups. Scope from endpoint logs instead of DNS sources.
 
 !!! info "Two quirks"
     Zeek has no `conn` record for WS03's callback, only an `ssl` record, so scoping from `conn` alone misses WS03. WS03's Sysmon network event is also stamped about 4 seconds before the process that made it, so allow some slack when lining up timestamps.

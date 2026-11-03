@@ -68,7 +68,7 @@ channel="smb_mapping" dst_ip!="10.1.10.10" | groupBy(src_ip, dst_ip, path, funct
 `\\WS03\IPC$` first shows up at 15:20:06, when the sprayed credential works. `\\WS03\ADMIN$` shows up at 15:28:45, when PAExec copies its service binary into `C:\Windows`.
 
 !!! finding "Finding · Q023"
-    **IPC$** carried the credential testing and **ADMIN$** the payload staging ([T1021.002](https://attack.mitre.org/techniques/T1021/002/)).
+    **IPC$** carried the spray's authentication attempts and **ADMIN$** carried the implant copy ([T1021.002](https://attack.mitre.org/techniques/T1021/002/), SMB/Windows Admin Shares). Copying a tool to another host this way is lateral tool transfer ([T1570](https://attack.mitre.org/techniques/T1570/)).
 
 ## The service <span class="q-ref">Q024</span> { #q024 }
 

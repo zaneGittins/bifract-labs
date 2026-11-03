@@ -6,7 +6,7 @@ title: "3. The loader"
 
 # The loader
 
-<p class="lb-lede">The PowerShell command unpacked a bundle with tar and ran QuickConnectSupport.exe. In this chapter I follow what tar wrote, check what that executable really is, and find what it started.</p>
+<p class="lb-lede">The download cradle extracted the archive with tar and ran QuickConnectSupport.exe. In this chapter I follow what tar wrote, check what that executable really is, and find what it started.</p>
 
 ## What did tar write? <span class="q-ref">Q005</span> { #q005 }
 
@@ -65,16 +65,20 @@ There are six files: the renamed interpreter, `LICENSE.txt`, `python312.zip`, `p
     The path configuration file is **python312._pth**.
 
 !!! info "Not timestomping"
-    Event 2 often catches attackers back-dating files. Here it's tar restoring the archive's timestamps, which happens to every file in the bundle. Event 2 has no `bifract_category`, so filter it by `event_id`.
+    Event 2 often catches attackers back-dating files. Here it's tar restoring the timestamps stored in the archive, which it does for every file it extracts. Event 2 has no `bifract_category`, so filter it by `event_id`.
 
 ## The file that doesn't belong <span class="q-ref">Q008</span> { #q008 }
 
-A stock embeddable Python ships `python312.zip`, `python312._pth`, `python.cat` and `LICENSE.txt`. One file in the list isn't part of Python: **`DocumentResources.dat`**, written right after the `._pth`. It's most likely a zip archive with a harmless-looking extension, added to the import path so Python loads the attacker's code from it.
+A stock embeddable Python ships `python312.zip`, `python312._pth`, `python.cat` and `LICENSE.txt`. One file in the list isn't part of Python: **`DocumentResources.dat`**, written right after the `._pth`.
 
-The logs don't show the `._pth` contents or a read of the `.dat`, so this is an inference from the files in the bundle. A full-text search for `"DocumentResources"` finds only this one event in the whole dataset.
+That's the attacker's code. It's a zip archive with a harmless-looking extension, and the `._pth` puts it on Python's import path. The stock `python312._pth` lists `python312.zip` and ends with `#import site`, commented out. The attacker adds `DocumentResources.dat` as a path and uncomments `import site`. On startup Python imports the `site` module, which loads `sitecustomize` from anywhere on the path, including inside the `.dat`. The attacker's code runs before any script, and the process starts with nothing on its command line but the executable.
+
+This technique comes from a real intrusion Black Hills ActiveSOC wrote up in [A Loader With No Command Line](https://activesoc.blackhillsinfosec.com/blog/a-loader-with-no-command-line/), which used the same `DocumentResources.dat` name.
+
+The logs here don't show the `._pth` contents or a read of the `.dat`. A full-text search for `"DocumentResources"` finds only this one event in the whole dataset. Sysmon event 11 only records a file's path. The writeup notes that event 15 (FileCreateStreamHash) captured the `._pth` contents in their case, so it's worth collecting.
 
 !!! finding "Finding · Q008"
-    The sidecar archive is **DocumentResources.dat**.
+    The archive holding the attacker's Python code is **DocumentResources.dat**.
 
 ## What did the loader start? <span class="q-ref">Q009</span> { #q009 }
 
@@ -86,7 +90,7 @@ ptg(start="9D045BEA-5269-6AE3-CC3D-000000001100", direction=forward, depth=1)
 <!-- shot: q009-ptg | The loader's one child. | rows=2 -->
 
 !!! finding "Finding · Q009"
-    The loader started **QuickConnect.Service.exe** at 14:04:30. That's the first foothold.
+    The loader started **QuickConnect.Service.exe** at 14:04:30. That's the implant, and the attacker's first foothold.
 
 ## See everything it touched
 
@@ -101,9 +105,9 @@ Use the **‹ ›** arrows next to **N rare** to step through the processes with
 
 The red **2 hosts reached via 2 artifacts** badge marks other hosts that share something rare with this tree. One is real: on WS03, a copy of the implant talks to the same `203.0.113.87` ([chapter 7](07-lateral-movement.md)). The other is a false lead. WS01 also looks up `login.microsoftonline.com`, like any Windows host signing in to Microsoft, so check each lead before you trust it.
 
-## Optional: does it look like a known C2?
+## Optional: does it look like a known C2 framework?
 
-`QuickConnect.Service.exe` isn't signed, and its SHA-256 won't be in any list. C2 frameworks build a fresh implant for every operator. **TLSH** is a fuzzy hash you compare by distance, so two builds of the same malware land close together even when their exact hashes have nothing in common. Zero means identical, and the number climbs as files diverge. Distances from 10 to 50 still mean quite similar, and that range is where the value is, because those are the files an exact hash would have missed completely.
+`QuickConnect.Service.exe` isn't signed, and its SHA-256 won't be in any list. C2 frameworks compile a fresh implant for each build, so every one has a new hash. **TLSH** is a fuzzy hash you compare by distance, so two builds of the same malware land close together even when their exact hashes have nothing in common. Zero means identical, and the number climbs as files diverge. Distances from 10 to 50 still mean quite similar, and that range is where the value is, because those are the files an exact hash would have missed completely.
 
 In this lab, Velociraptor's `Windows.EventLogs.SysmonProcessEnriched` artifact staples a TLSH digest (`tlsh`) and a signing status (`trusted`) onto Sysmon process events. 245 process starts have a digest. ([Fuzzy Hash Hunting with Velociraptor and Bifract](https://signalsleuth.io/2026/09/11/tlsh.html) shows how to collect them in your own environment.) To compare them with public attack tools:
 

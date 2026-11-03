@@ -69,7 +69,7 @@
       "stage": "initial-access",
       "title": "Download",
       "difficulty": "medium",
-      "prompt": "Which command interpreter did Explorer start to download and unpack the first bundle?",
+      "prompt": "Which command interpreter did Explorer start to download and extract the payload archive?",
       "answer": {
         "type": "string",
         "canonical": "powershell.exe",
@@ -210,9 +210,9 @@
     {
       "id": "012",
       "stage": "remote-access",
-      "title": "Remote support tool",
+      "title": "Remote access tool",
       "difficulty": "medium",
-      "prompt": "Which remote support tool was deployed under the same support-themed file name?",
+      "prompt": "Which remote access tool was deployed under the same support-themed file name?",
       "answer": {
         "type": "string",
         "canonical": "RustDesk",
@@ -320,9 +320,9 @@
     {
       "id": "018",
       "stage": "credential-access",
-      "title": "Rejected users",
+      "title": "Failed accounts",
       "difficulty": "medium",
-      "prompt": "Which two regular user accounts rejected the sprayed password?",
+      "prompt": "For which two regular user accounts did the sprayed password fail?",
       "answer": {
         "type": "set",
         "canonical": ["john.reyes", "maria.chen"],
@@ -340,9 +340,9 @@
     {
       "id": "019",
       "stage": "credential-access",
-      "title": "Rejected admin",
+      "title": "Failed admin",
       "difficulty": "medium",
-      "prompt": "Which admin-named account also rejected the sprayed password?",
+      "prompt": "Which admin-named account did the sprayed password also fail for?",
       "answer": {
         "type": "string",
         "canonical": "it.admin",
@@ -357,9 +357,9 @@
     {
       "id": "020",
       "stage": "credential-access",
-      "title": "Working credential",
+      "title": "Valid account",
       "difficulty": "medium",
-      "prompt": "Which account accepted the sprayed password?",
+      "prompt": "Which account was the sprayed password valid for?",
       "answer": {
         "type": "string",
         "canonical": "MERIDIAN\\svc.wksdeploy",
@@ -410,7 +410,7 @@
       "stage": "lateral-movement",
       "title": "Admin shares",
       "difficulty": "medium",
-      "prompt": "Which two admin shares were used, one to test credentials and one to stage the payload?",
+      "prompt": "Which two admin shares were used, one to test credentials and one to copy the payload?",
       "answer": {
         "type": "set",
         "canonical": ["IPC$", "ADMIN$"]
@@ -493,7 +493,7 @@
     {
       "id": "028",
       "stage": "infrastructure",
-      "title": "Implant port",
+      "title": "C2 port",
       "difficulty": "medium",
       "prompt": "Which destination port did the implant use for command and control?",
       "answer": {
@@ -501,7 +501,7 @@
         "canonical": "8888",
         "accepted": ["8888", "TCP/8888", "8888/tcp"]
       },
-      "hint": "Separate the implant's traffic from the remote support tool's traffic.",
+      "hint": "Separate the implant's traffic from the remote access tool's traffic.",
       "evidence": {
         "sources": ["Zeek connection", "Zeek SSL", "Sysmon network connection"],
         "fields": ["image", "dst_ip", "dst_port", "proto"]
@@ -510,9 +510,9 @@
     {
       "id": "029",
       "stage": "infrastructure",
-      "title": "Remote support ports",
+      "title": "Remote access ports",
       "difficulty": "hard",
-      "prompt": "Which two destination ports carried the remote support tool's signaling and relay traffic?",
+      "prompt": "Which two destination ports carried the remote access tool's rendezvous and relay traffic?",
       "answer": {
         "type": "set",
         "canonical": ["21116", "21117"],
@@ -530,9 +530,9 @@
     {
       "id": "030",
       "stage": "infrastructure",
-      "title": "Extra remote support port",
+      "title": "Extra remote access port",
       "difficulty": "medium",
-      "prompt": "Which other destination port did the remote support tool connect to successfully?",
+      "prompt": "Which other destination port did the remote access tool connect to successfully?",
       "answer": {
         "type": "string",
         "canonical": "21115",
@@ -549,7 +549,7 @@
       "stage": "scope",
       "title": "Callbacks",
       "difficulty": "medium",
-      "prompt": "Which two workstations called back to the implant's server?",
+      "prompt": "Which two workstations called back to the C2 server?",
       "answer": {
         "type": "set",
         "canonical": ["WS02", "WS03"],
