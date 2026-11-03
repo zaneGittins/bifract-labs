@@ -10,8 +10,6 @@ title: "1. Hunting with baselines"
 
 Meridian only has three days of history, which is short for a baseline. That's why this chapter uses **first seen** and **network** models instead of 30-day rarity. With weeks of data in your own environment, the same questions work even better.
 
-In [PEAK](https://www.splunk.com/en_us/blog/security/peak-baseline-hunting.html) terms this is a model-assisted hunt, since the models hold the baseline and I review what they flag.
-
 ## What remote access tools are new here?
 
 Attackers like remote access tools because they're signed and trusted. Which ones ran on each host, and when did each first appear?
