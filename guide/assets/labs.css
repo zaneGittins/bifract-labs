@@ -575,6 +575,27 @@ body { background: var(--lb-bg); }
   .md-typeset .lb-flow-art { max-width: 7rem; }
 }
 
+/* Field reference: keep field names whole */
+.md-typeset .lb-fields td:first-child code { white-space: nowrap; }
+@media (max-width: 44.9em) {
+  /* Stack each row on phones: field, then what it holds, then where it's found */
+  .md-typeset .lb-fields table:not([class]) { display: block; border: 1px solid var(--lb-border); }
+  .md-typeset .lb-fields table:not([class]) thead { display: none; }
+  .md-typeset .lb-fields table:not([class]) tbody,
+  .md-typeset .lb-fields table:not([class]) tr,
+  .md-typeset .lb-fields table:not([class]) td { display: block; }
+  .md-typeset .lb-fields table:not([class]) tr { padding: 0.55rem 0; }
+  .md-typeset .lb-fields table:not([class]) tr + tr { border-top: 1px solid var(--lb-border-soft); }
+  .md-typeset .lb-fields table:not([class]) td { border: 0; padding: 0.1rem 0.9rem; }
+  .md-typeset .lb-fields table:not([class]) td:first-child { font-weight: 600; }
+  .md-typeset .lb-fields table:not([class]) td:nth-child(3) { color: var(--lb-muted); }
+  .md-typeset .lb-fields table:not([class]) td:nth-child(3)::before { content: "Found in: "; }
+  .md-typeset .lb-fields #sources + table td:nth-child(2)::after,
+  .md-typeset .lb-fields #sources + * table td:nth-child(2)::after { content: " events"; }
+  .md-typeset .lb-fields #sources + table td:nth-child(3)::before,
+  .md-typeset .lb-fields #sources + * table td:nth-child(3)::before { content: "Filter by "; }
+}
+
 /* Lab network diagram */
 .md-typeset .lb-net { display: grid; grid-template-columns: 1fr 1fr; gap: 1.4rem 2rem; align-items: start; }
 .md-typeset .lb-net svg { display: block; width: 100%; max-width: 22rem; height: auto; }

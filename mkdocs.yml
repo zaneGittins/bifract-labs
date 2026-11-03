@@ -96,6 +96,7 @@ nav:
       - 7. Lateral movement: 001/walkthrough/07-lateral-movement.md
       - 8. Infrastructure and scope: 001/walkthrough/08-infrastructure.md
       - 9. Timeline and takeaways: 001/walkthrough/09-summary.md
+    - Field reference: 001/fields.md
 
 extra:
   generator: false

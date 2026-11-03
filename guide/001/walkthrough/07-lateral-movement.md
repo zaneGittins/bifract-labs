@@ -15,7 +15,7 @@ Pivot from the account to everywhere it logged on:
 ```bql
 event_id="4624" target_user_name="svc.wksdeploy" | groupBy(computer_name, ip_address, logon_type, function=multi(count(), min(timestamp, as=first)))
 ```
-<!-- shot: q021-svc-logons | svc.wksdeploy logons: one host, one source. | rows=1 -->
+<!-- shot: q021-svc-logons | svc.wksdeploy only logged on to WS03, and only from WS02. | rows=1 -->
 
 All 15 logons are network logons on WS03, from `10.1.10.22` (WS02).
 

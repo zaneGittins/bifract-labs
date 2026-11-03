@@ -12,7 +12,7 @@ title: "Lab 001 walkthrough"
     Finish [setup](../setup.md). If you loaded the lab from the Exchange or Codespaces, the fractal already opens on the dataset's time range. Otherwise set a custom range of **Oct 27 to Nov 1, 2026**. All times are UTC. Hover over any query to get an **Open in Bifract** button.
 
 <ol class="lb-chapters">
-<li><span class="lb-qs">Q001 to Q002</span><a href="01-baselines/">Hunting with baselines</a><p>Use models to find what's new or unusual, and the first host.</p></li>
+<li><span class="lb-qs">Q001 to Q002</span><a href="01-baselines/">Hunting with baselines</a><p>Use models to find what's new or unusual, and patient zero.</p></li>
 <li><span class="lb-qs">Q003 to Q004</span><a href="02-initial-access/">Initial access</a><p>The command pasted into the Run dialog, and what it downloaded.</p></li>
 <li><span class="lb-qs">Q005 to Q009</span><a href="03-loader/">The loader</a><p>A signed program running under another name, and the payload it starts.</p></li>
 <li><span class="lb-qs">Q010 to Q013</span><a href="04-hands-on-keyboard/">Hands on keyboard</a><p>Discovery commands, a renamed remote access tool, and commands typed by a person.</p></li>
@@ -30,7 +30,7 @@ bifract_category="process_creation" parent_image=$"\\explorer.exe"
   | groupBy(computer_name, image) | sort(_count)
 ```
 
-Queries are [BQL](https://docs.bifract.io/bql/basics/): filters first, then a pipe into each transform. Under each query is a screenshot of what you should see. A purple box sums up what the step found:
+Queries are [BQL](https://docs.bifract.io/bql/basics/): filters first, then a pipe into each transform. The [field reference](../fields.md) lists the main fields by source. Under each query is a screenshot of what you should see. A purple box sums up what the step found:
 
 !!! finding "Finding"
     What the step showed, and the answer to any question it covers.

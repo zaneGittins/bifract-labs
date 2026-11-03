@@ -6,7 +6,7 @@ title: "4. Hands on keyboard"
 
 # Hands on keyboard
 
-<p class="lb-lede">Once they had a foothold, the attacker checked where they landed: which user, which host, which network. Some of that was automated. Then a remote access tool showed up and someone started typing.</p>
+<p class="lb-lede">Once they had a foothold, the attacker checked the user, host and network they were on. Some of that was automated. After a remote access tool was installed, the commands were typed by hand.</p>
 
 ## Automated discovery <span class="q-ref">Q010</span> { #q010 }
 
@@ -54,19 +54,19 @@ Chapter 1's first seen model already flagged a second `QuickConnectSupport.exe`.
 ```bql
 bifract_category="process_creation" | image=$"\\QuickConnectSupport.exe" | groupBy(image, original_file_name, product, description)
 ```
-<!-- shot: q012-two-identities | One file name, two binaries. | rows=2 -->
+<!-- shot: q012-two-identities | Two different binaries with the same file name. | rows=2 -->
 
 It's the same file name for two programs: the Python loader in `Temp`, and **RustDesk Remote Desktop** in `AppData\Local\Programs\QuickConnect Support\`. RustDesk is open source remote desktop software that can use any relay server, including one the attacker runs.
 
 ```bql
 bifract_category="network_connect" | image=~QuickConnect,rustdesk | groupBy(computer_name, image, dst_ip, dst_port) | sort(_count, order=desc)
 ```
-<!-- shot: q012-rustdesk-net | RustDesk talks to 192.0.2.146 on its rendezvous and relay ports. | rows=8 -->
+<!-- shot: q012-rustdesk-net | RustDesk connects to 192.0.2.146 on its rendezvous and relay ports. | rows=8 -->
 
 !!! finding "Finding · Q012"
     The remote access tool is **RustDesk**, deployed under the support-themed name `QuickConnectSupport.exe`.
 
-## Someone typing <span class="q-ref">Q013</span> { #q013 }
+## Typed commands <span class="q-ref">Q013</span> { #q013 }
 
 Back to the Run dialog history from chapter 2:
 

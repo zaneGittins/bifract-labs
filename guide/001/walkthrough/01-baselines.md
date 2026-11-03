@@ -6,19 +6,21 @@ title: "1. Hunting with baselines"
 
 # Hunting with baselines
 
-<p class="lb-lede">There's no alert to start from, so I start with what normal looks like: which tools are new, what talks on a timer, and what's rare for the user running it.</p>
+<p class="lb-lede">There's no alert to start from, so I start with what normal looks like: which tools are new, what's beaconing, and what's rare for the user running it.</p>
 
 Meridian only has three days of history, which is short for a baseline. That's why this chapter uses **first seen** and **network** models instead of 30-day rarity. With weeks of data in your own environment, the same questions work even better.
 
-## What remote tools are new here?
+In [PEAK](https://www.splunk.com/en_us/blog/security/peak-baseline-hunting.html) terms this is a model-assisted hunt, since the models hold the baseline and I review what they flag.
+
+## What remote access tools are new here?
 
 Attackers like remote access tools because they're signed and trusted. Which ones ran on each host, and when did each first appear?
 
 The `remote_tools_first_seen` model keys on the binary's **original file name**, the name compiled into the executable, instead of the name on disk.
 
-<!-- shot: model-remote-tools | `remote_tools_first_seen`: every remote tool per host, with first and last sighting. -->
+<!-- shot: model-remote-tools | `remote_tools_first_seen`: every remote access tool per host, with first and last sighting. -->
 
-TeamViewer has run on WS01 since the first morning of the data, so it's the remote tool Meridian actually uses. On the third day, two new tools show up on **WS02**: RustDesk (twice) and PAExec. A minute later PAExec shows up on **WS03**.
+TeamViewer has run on WS01 since the first morning of the data, so it's the remote access tool Meridian actually uses. On the third day, two new tools show up on **WS02**: RustDesk (twice) and PAExec. A minute later PAExec shows up on **WS03**.
 
 !!! anomaly "Out of place"
     One of the RustDesk rows isn't called `rustdesk.exe`. It runs as `QuickConnectSupport.exe` from `AppData\Local\Programs\QuickConnect Support\`. A rule matching install paths or file names would miss it, but its original file name gives it away.
@@ -32,7 +34,7 @@ It has RustDesk and PAExec (which LOLRMM lists as a PsExec clone), both new on O
 - Its LOLRMM patterns match install paths, so it finds `rustdesk.exe` but not the renamed copy. The first seen model caught both because it counts the original file name.
 - **Findings** is empty and coverage is 0. With three days of history, every tool each user ran has been seen once, so there's no evidence yet that a new tool is unusual for them. After a few weeks of normal activity, the same first sighting would score as rare.
 
-## What's talking on a timer?
+## What's beaconing?
 
 An implant usually checks in with its command and control (C2) server on a timer, and people don't. That regular check-in is called **beaconing**. Attackers add **jitter**, a random amount added to or taken off the sleep time between check-ins, but the rhythm still shows. Here is one hour on WS02:
 
@@ -62,7 +64,7 @@ Interactive remote sessions hold a connection open. The `outbound_long_connectio
 
 The top pair is the same `192.0.2.146` destination the beacon model found, on RustDesk's port 21116. All three models point at WS02.
 
-## First host <span class="q-ref">Q001</span> { #q001 }
+## Patient zero <span class="q-ref">Q001</span> { #q001 }
 
 To confirm it without models, stack every program that the Windows shell (`explorer.exe`) started on each host, rarest first. Normal apps repeat on every workstation, so a program started once is worth a look.
 
