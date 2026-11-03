@@ -575,6 +575,21 @@ body { background: var(--lb-bg); }
   .md-typeset .lb-flow-art { max-width: 7rem; }
 }
 
+/* Lab network diagram */
+.md-typeset .lb-net { display: grid; grid-template-columns: 1fr 1fr; gap: 1.4rem 2rem; align-items: start; }
+.md-typeset .lb-net svg { display: block; width: 100%; max-width: 22rem; height: auto; }
+.lb-net .lan { fill: none; stroke: var(--lb-border); stroke-width: 1.5; stroke-dasharray: 6 4; }
+.lb-net .box { fill: var(--lb-bg); stroke: var(--lb-border); stroke-width: 1.5; }
+.lb-net .wire { fill: none; stroke: var(--lb-muted); stroke-width: 1.5; }
+.lb-net .dash { stroke-dasharray: 4 3; }
+.lb-net .flow { fill: none; stroke: var(--lb-accent); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.lb-net text { fill: var(--lb-text); font-family: var(--md-text-font-family); font-size: 11px; }
+.lb-net text.host { fill: var(--lb-strong); font-family: var(--md-code-font-family); font-size: 12px; font-weight: 600; }
+.lb-net text.grp { fill: var(--lb-strong); font-size: 12px; font-weight: 600; }
+.lb-net text.ip { font-family: var(--md-code-font-family); }
+.lb-net text.role, .lb-net text.lbl { fill: var(--lb-muted); }
+@media (max-width: 44.9em) { .md-typeset .lb-net { grid-template-columns: 1fr; } }
+
 /* Beacon timeline */
 .md-typeset .lb-beacon-row { margin: 0 0 1rem; }
 .md-typeset .lb-beacon-label b { display: block; font: 600 0.72rem var(--md-code-font-family); color: var(--lb-strong); }

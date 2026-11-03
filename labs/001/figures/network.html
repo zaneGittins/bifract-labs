@@ -1,0 +1,49 @@
+<div class="lb-net">
+<svg class="lb-net-map" viewBox="0 0 340 384" role="img" aria-label="The meridian.internal network, 10.1.10.0/24. A router at 10.1.10.254 connects the internet to a switch. The switch connects DC01 at 10.1.10.10, WS01 at 10.1.10.21, WS02 at 10.1.10.22 and WS03 at 10.1.10.23. The Zeek sensor meridian-netmon01 gets a copy of the switch's traffic.">
+<text class="lbl" x="250" y="14" text-anchor="middle">internet</text>
+<line class="wire" x1="250" y1="22" x2="250" y2="60"/>
+<rect class="lan" x="4" y="40" width="332" height="336" rx="8"/>
+<text class="host" x="18" y="64">meridian.internal</text>
+<text class="ip" x="18" y="81">10.1.10.0/24</text>
+<rect class="box" x="192" y="60" width="116" height="44" rx="5"/>
+<text class="grp" x="250" y="78" text-anchor="middle">router</text>
+<text class="ip" x="250" y="95" text-anchor="middle">10.1.10.254</text>
+<line class="wire" x1="250" y1="104" x2="250" y2="130"/>
+<rect class="box" x="207" y="130" width="86" height="26" rx="5"/>
+<text class="role" x="250" y="147" text-anchor="middle">switch</text>
+<line class="wire dash" x1="188" y1="143" x2="207" y2="143"/>
+<rect class="box" x="18" y="120" width="170" height="46" rx="5"/>
+<text class="host" x="30" y="139">meridian-netmon01</text>
+<text class="role" x="30" y="156">Zeek sensor</text>
+<path class="wire" d="M250 156V178H18V344M18 212H32M18 256H32M18 300H32M18 344H32"/>
+<rect class="box" x="32" y="194" width="290" height="36" rx="5"/>
+<text class="host" x="44" y="216">DC01</text><text class="ip" x="100" y="216">10.1.10.10</text><text class="role" x="310" y="216" text-anchor="end">domain controller</text>
+<rect class="box" x="32" y="238" width="290" height="36" rx="5"/>
+<text class="host" x="44" y="260">WS01</text><text class="ip" x="100" y="260">10.1.10.21</text><text class="role" x="310" y="260" text-anchor="end">workstation</text>
+<rect class="box" x="32" y="282" width="290" height="36" rx="5"/>
+<text class="host" x="44" y="304">WS02</text><text class="ip" x="100" y="304">10.1.10.22</text><text class="role" x="310" y="304" text-anchor="end">workstation</text>
+<rect class="box" x="32" y="326" width="290" height="36" rx="5"/>
+<text class="host" x="44" y="348">WS03</text><text class="ip" x="100" y="348">10.1.10.23</text><text class="role" x="310" y="348" text-anchor="end">workstation</text>
+</svg>
+<svg class="lb-net-logs" viewBox="0 0 340 300" role="img" aria-label="How the logs got to Bifract. Velociraptor collected Sysmon, the Windows event logs and Autoruns from DC01 and WS01 to WS03 and sent them to Bifract. The Zeek sensor meridian-netmon01 sent its logs to Bifract.">
+<text class="lbl" x="4" y="14">How the logs got to Bifract</text>
+<rect class="box" x="4" y="40" width="160" height="46" rx="5"/>
+<text class="grp" x="16" y="59">Windows hosts</text>
+<text class="role" x="16" y="76">DC01, WS01 to WS03</text>
+<rect class="box" x="176" y="40" width="160" height="46" rx="5"/>
+<text class="host" x="188" y="59">meridian-netmon01</text>
+<text class="role" x="188" y="76">Zeek sensor</text>
+<path class="flow" d="M84 86V148M78 142L84 148L90 142"/>
+<text class="role" x="94" y="113">Sysmon, event logs,</text>
+<text class="role" x="94" y="127">Autoruns</text>
+<rect class="box" x="4" y="150" width="160" height="46" rx="5"/>
+<text class="grp" x="16" y="169">Velociraptor</text>
+<text class="role" x="16" y="186">log collection</text>
+<path class="flow" d="M256 86V248M250 242L256 248L262 242"/>
+<text class="role" x="248" y="222" text-anchor="end">Zeek logs</text>
+<path class="flow" d="M84 196V273H174M168 267L174 273L168 279"/>
+<rect class="box" x="176" y="250" width="160" height="46" rx="5"/>
+<text class="grp" x="188" y="269">Bifract</text>
+<text class="role" x="188" y="286">where you search</text>
+</svg>
+</div>
