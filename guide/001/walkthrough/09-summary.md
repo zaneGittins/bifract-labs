@@ -11,8 +11,8 @@ title: "9. Timeline and takeaways"
 ## Timeline
 
 <div class="lb-timeline" markdown>
-<div><time>14:02</time><b>ClickFix</b><p>jen.walker pastes a PowerShell command into the Run dialog on WS02. It downloads a bundle from <code>update-cache-m9tdco18phmc.com</code>.</p></div>
-<div><time>14:04</time><b>Loader</b><p><code>tar</code> unpacks a portable Python. <code>QuickConnectSupport.exe</code>, really a signed <code>pythonw.exe</code>, imports code from <code>DocumentResources.dat</code> and starts <code>QuickConnect.Service.exe</code>, which calls <code>203.0.113.87:8888</code>.</p></div>
+<div><time>14:02</time><b>ClickFix</b><p>jen.walker pastes a PowerShell command into the Run dialog on WS02. A download cradle fetches a payload archive from <code>update-cache-m9tdco18phmc.com</code>.</p></div>
+<div><time>14:04</time><b>Loader</b><p><code>tar</code> extracts an embeddable Python. <code>QuickConnectSupport.exe</code>, really a signed <code>pythonw.exe</code>, imports code from <code>DocumentResources.dat</code> and starts <code>QuickConnect.Service.exe</code>, which calls <code>203.0.113.87:8888</code>.</p></div>
 <div><time>14:10</time><b>Discovery</b><p>The implant runs <code>whoami /all</code>, <code>ipconfig /all</code> and <code>systeminfo</code>.</p></div>
 <div><time>14:18</time><b>Remote access</b><p>RustDesk, renamed <code>QuickConnectSupport.exe</code>, connects to the attacker's relay at <code>192.0.2.146</code>.</p></div>
 <div><time>14:22</time><b>Hands on keyboard</b><p>Over RustDesk, the attacker types <code>cmd.exe /k whoami.exe &amp; hostname.exe &amp; ipconfig.exe /all</code> into Run. An 84-minute relay session begins.</p></div>
@@ -38,11 +38,11 @@ title: "9. Timeline and takeaways"
 | IP | `203.0.113.87` | C2 on TCP 8888; download on 443 |
 | IP | `192.0.2.146` | RustDesk relay on TCP 21115 to 21117 |
 | File | `%TEMP%\QuickConnect\QuickConnectSupport.exe` | Renamed `pythonw.exe` (loader) |
-| File | `%TEMP%\QuickConnect\DocumentResources.dat` | Python code in a zip |
-| File | `%TEMP%\QuickConnect\python312._pth` | Likely points Python at the sidecar |
+| File | `%TEMP%\QuickConnect\DocumentResources.dat` | Zip of the attacker's Python code |
+| File | `%TEMP%\QuickConnect\python312._pth` | Adds `DocumentResources.dat` to Python's import path |
 | File | `QuickConnect.Service.exe` | Implant (`%TEMP%\QuickConnect\` on WS02, `C:\Windows\` on WS03) |
 | File | `%LOCALAPPDATA%\Programs\QuickConnect Support\QuickConnectSupport.exe` | Renamed RustDesk |
-| File | `%APPDATA%\Greenshot\Greenshot.Plugin.QuickConnect.dll`, `QuickConnect.ImageCache.dll` | Persistence plugins |
+| File | `%APPDATA%\Greenshot\Greenshot.Plugin.QuickConnect.dll`, `QuickConnect.ImageCache.dll` | Malicious Greenshot plugins |
 | Registry | `HKCU\Software\Microsoft\Windows\CurrentVersion\Run\Greenshot` | Logon persistence |
 | Service | `PAExec-6740-WS02` | Remote execution on WS03 |
 | Account | `MERIDIAN\svc.wksdeploy` | Compromised by password spray |

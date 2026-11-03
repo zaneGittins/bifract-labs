@@ -34,7 +34,7 @@ It has RustDesk and PAExec (which LOLRMM lists as a PsExec clone), both new on O
 
 ## What's talking on a timer?
 
-Malware usually calls home on a timer, and people don't. That regular check-in is called a **beacon**. Attackers add **jitter**, a few seconds of random wobble, but the rhythm still shows. Here is one hour on WS02:
+An implant usually checks in with its command and control (C2) server on a timer, and people don't. That regular check-in is called **beaconing**. Attackers add **jitter**, a random amount added to or taken off the sleep time between check-ins, but the rhythm still shows. Here is one hour on WS02:
 
 <!-- beacon: labs/001/figures/beacon-hour.tsv | One hour on WS02, Oct 30, 2026 (UTC). Each tick is one connection, and taller ticks sent more bytes. The C2 checks in about every 30 seconds, always with nearly the same size. People's traffic comes in bursts. -->
 
@@ -64,7 +64,7 @@ The top pair is the same `192.0.2.146` destination the beacon model found, on Ru
 
 ## First host <span class="q-ref">Q001</span> { #q001 }
 
-To confirm it without models, stack count every program that the Windows shell (`explorer.exe`) started on each host, rarest first. Normal apps repeat on every workstation, so a shell started once is worth a look.
+To confirm it without models, stack every program that the Windows shell (`explorer.exe`) started on each host, rarest first. Normal apps repeat on every workstation, so a program started once is worth a look.
 
 ```bql
 bifract_category="process_creation" parent_image=$"\\explorer.exe" | groupBy(computer_name, image) | sort(_count)

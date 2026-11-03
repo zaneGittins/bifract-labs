@@ -28,18 +28,18 @@ One password tried against many accounts is a password spray ([T1110.003](https:
 !!! finding "Finding · Q017"
     The sprayed password is **Meridian2026!** (case sensitive).
 
-## Which accounts said no? <span class="q-ref">Q018</span> <span class="q-ref">Q019</span> { #q018 }
+## Which accounts failed? <span class="q-ref">Q018</span> <span class="q-ref">Q019</span> { #q018 }
 
 <a id="q019"></a>
 
-Each `net use` triggers a Kerberos login at the domain controller, which Zeek sees on the wire:
+Each `net use` makes WS02 ask the domain controller for a Kerberos ticket (an AS-REQ), which Zeek sees on the wire:
 
 ```bql
 channel="kerberos" request_type="AS" | NOT client=~"$/" | groupBy(src_ip, client, success, error_msg) | sort(client)
 ```
 <!-- shot: q018-kerberos | Kerberos AS requests from WS02, machine accounts removed. | rows=8 -->
 
-`KDC_ERR_PREAUTH_REQUIRED` is the normal first round trip of every Kerberos login. `KDC_ERR_PREAUTH_FAILED` means the password was wrong. `NOT client=~"$/"` drops machine accounts like `WS02$`.
+`KDC_ERR_PREAUTH_REQUIRED` is normal: the client's first AS-REQ has no pre-authentication data, and the KDC asks for it. `KDC_ERR_PREAUTH_FAILED` means the password was wrong. `NOT client=~"$/"` drops machine accounts like `WS02$`.
 
 DC01 logs the same failures as event 4771:
 
@@ -51,7 +51,7 @@ event_id="4771" | groupBy(computer_name, target_user_name, status, ip_address)
 All three come from `10.1.10.22`, which is WS02.
 
 !!! finding "Finding · Q018 and Q019"
-    Regular users **john.reyes** and **maria.chen** rejected the password, and so did the admin-named account **it.admin**.
+    Pre-authentication failed for regular users **john.reyes** and **maria.chen**, and for the admin-named account **it.admin**.
 
 ## The one that worked <span class="q-ref">Q020</span> { #q020 }
 
@@ -65,6 +65,6 @@ event_id="4624" ip_address="10.1.10.22" | groupBy(computer_name, target_user_nam
 WS02's machine account and jen.walker log on to DC01 all the time. The new row is **svc.wksdeploy**: a network logon (type 3) on **WS03**, 15 times, first at 15:20:06. It matches the only successful AS request in the Zeek output.
 
 !!! finding "Finding · Q020"
-    **MERIDIAN\svc.wksdeploy** accepted the sprayed password. Deployment accounts like this usually have local admin on workstations.
+    The sprayed password was valid for **MERIDIAN\svc.wksdeploy**. Deployment accounts like this usually have local admin on workstations.
 
 Next: [what the attacker did with it](07-lateral-movement.md).

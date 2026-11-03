@@ -6,7 +6,7 @@ title: "4. Hands on keyboard"
 
 # Hands on keyboard
 
-<p class="lb-lede">Once they had a foothold, the attacker checked where they landed: which user, which host, which network. Some of that was automated. Then a remote support tool showed up and someone started typing.</p>
+<p class="lb-lede">Once they had a foothold, the attacker checked where they landed: which user, which host, which network. Some of that was automated. Then a remote access tool showed up and someone started typing.</p>
 
 ## Automated discovery <span class="q-ref">Q010</span> { #q010 }
 
@@ -47,7 +47,7 @@ bifract_category="process_creation" | in(parent_process_guid, &wrappers) | image
 !!! tip "Bindings"
     `let &name := ...;` runs a query and keeps its result for the next one. Here `in()` matches each process's parent GUID against that list.
 
-## The support tool <span class="q-ref">Q012</span> { #q012 }
+## The remote access tool <span class="q-ref">Q012</span> { #q012 }
 
 Chapter 1's first seen model already flagged a second `QuickConnectSupport.exe`. Here are the two side by side:
 
@@ -64,7 +64,7 @@ bifract_category="network_connect" | image=~QuickConnect,rustdesk | groupBy(comp
 <!-- shot: q012-rustdesk-net | RustDesk talks to 192.0.2.146 on its rendezvous and relay ports. | rows=8 -->
 
 !!! finding "Finding · Q012"
-    The remote support product is **RustDesk**, deployed under the support-themed name `QuickConnectSupport.exe`.
+    The remote access tool is **RustDesk**, deployed under the support-themed name `QuickConnectSupport.exe`.
 
 ## Someone typing <span class="q-ref">Q013</span> { #q013 }
 
