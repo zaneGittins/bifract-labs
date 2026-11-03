@@ -4,6 +4,8 @@ title: "Lab 001 walkthrough"
 
 # Walkthrough
 
+![](../../assets/art/walkthrough-logs.webp){ .lb-spot .no-zoom width="480" height="480" }
+
 <p class="lb-lede">This is how I'd work the intrusion, from no alert at all to a full timeline. Every question in the question set is answered along the way, tagged like <span class="q-ref" style="margin:0">Q001</span>.</p>
 
 !!! info "Before you start"

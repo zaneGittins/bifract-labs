@@ -2,6 +2,8 @@
 title: "9. Timeline and takeaways"
 ---
 
+![](../../assets/art/timeline-takeaways.webp){ .lb-cover .lb-cover--page .no-zoom width="1600" height="640" }
+
 <p class="lb-kicker">Chapter 9</p>
 
 # Timeline and takeaways
