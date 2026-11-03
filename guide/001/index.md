@@ -28,3 +28,7 @@ Meridian is a small Windows domain, and somewhere in its logs is an intrusion. F
     | **Network** | `meridian.internal`, `10.1.10.0/24` |
     | **Sources** | Sysmon (no process access), Windows Security, System, PowerShell, Defender and WMI logs, Zeek, and Autoruns before and after the incident |
     | **Techniques** (mild hints) | [T1059.001](https://attack.mitre.org/techniques/T1059/001/), [T1036](https://attack.mitre.org/techniques/T1036/), [T1219](https://attack.mitre.org/techniques/T1219/), [T1547.001](https://attack.mitre.org/techniques/T1547/001/), [T1110.003](https://attack.mitre.org/techniques/T1110/003/), [T1021.002](https://attack.mitre.org/techniques/T1021/002/), [T1569.002](https://attack.mitre.org/techniques/T1569/002/), [T1033](https://attack.mitre.org/techniques/T1033/), [T1016](https://attack.mitre.org/techniques/T1016/), [T1082](https://attack.mitre.org/techniques/T1082/), plus the initial access technique Q003 asks you to name |
+
+## Network
+
+<!-- figure: labs/001/figures/network.html | Velociraptor shipped Sysmon, the Windows event logs and Autoruns from the four Windows hosts. The Zeek sensor got a copy of the switch's traffic. -->
