@@ -16,7 +16,7 @@
     {
       "id": "001",
       "stage": "triage",
-      "title": "First host",
+      "title": "Patient zero",
       "difficulty": "easy",
       "prompt": "Which workstation was compromised first?",
       "answer": {

@@ -20,12 +20,12 @@ title: "9. Timeline and takeaways"
 <div><time>14:22</time><b>Hands on keyboard</b><p>Over RustDesk, the attacker types <code>cmd.exe /k whoami.exe &amp; hostname.exe &amp; ipconfig.exe /all</code> into Run. An 84-minute relay session begins.</p></div>
 <div><time>14:36</time><b>Staging</b><p>Two DLLs land in <code>AppData\Roaming\Greenshot\</code>.</p></div>
 <div><time>14:42</time><b>Persistence</b><p><code>reg add</code> sets <code>HKCU\...\Run\Greenshot</code>.</p></div>
-<div><time>14:51</time><b>Greenshot takes over</b><p>Greenshot is relaunched, loads the attacker's DLL, and takes over the beacon to <code>203.0.113.87:8888</code>.</p></div>
+<div><time>14:51</time><b>Greenshot loads the DLL</b><p>Greenshot is relaunched and loads the attacker's DLL. The beacon to <code>203.0.113.87:8888</code> now comes from Greenshot.</p></div>
 <div><time>15:19</time><b>Password spray</b><p>One password, <code>Meridian2026!</code>, against four accounts via <code>net use \\WS03\IPC$</code>. Three fail.</p></div>
 <div><time>15:20</time><b>Valid account</b><p><code>svc.wksdeploy</code> logs on to WS03.</p></div>
 <div><time>15:28</time><b>Lateral movement</b><p>PAExec copies the implant over <code>ADMIN$</code> and installs service <code>PAExec-6740-WS02</code> on WS03.</p></div>
-<div><time>15:29</time><b>Second foothold</b><p>The implant runs on WS03 as SYSTEM and calls home.</p></div>
-<div><time>Oct 30</time><b>Persistence holds</b><p>Greenshot on WS02 beacons until 13:22. svc.wksdeploy is used against WS03 again at 01:28 and 11:08.</p></div>
+<div><time>15:29</time><b>Second foothold</b><p>The implant runs on WS03 as SYSTEM and calls back to the C2 server.</p></div>
+<div><time>Oct 30</time><b>Still active</b><p>Greenshot on WS02 beacons until 13:22. svc.wksdeploy is used against WS03 again at 01:28 and 11:08.</p></div>
 </div>
 
 ## Indicators

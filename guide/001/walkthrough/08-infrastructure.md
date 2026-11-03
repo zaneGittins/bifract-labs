@@ -6,7 +6,7 @@ title: "8. Infrastructure and scope"
 
 # Infrastructure and scope
 
-<p class="lb-lede">With the story mostly worked out, the last step is pinning down the attacker's infrastructure, so it can be blocked and hunted for elsewhere, and making sure we know every host it reached.</p>
+<p class="lb-lede">With most of the intrusion worked out, the last step is finding the attacker's domains, IPs and ports so they can be blocked and hunted for elsewhere, then checking every host that called back.</p>
 
 !!! warning "Don't contact these indicators"
     The domains below are made up and the IPs are from documentation ranges. Don't resolve, browse to or connect to any of them.
