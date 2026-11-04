@@ -13,11 +13,11 @@ title: "3. The loader"
 Sysmon event 11 records file creation. Filter to the files `tar.exe` wrote:
 
 ```bql
-event_id="11" image=$"\\tar.exe" | sort(timestamp) | table(timestamp, computer_name, user, target_file)
+event_id=11 image=$"\\tar.exe" | table(timestamp, computer_name, user, target_file)
 ```
 <!-- shot: q005-tar-writes | Files tar created in the user's Temp folder. | rows=9 -->
 
-The first file is `...\Temp\QuickConnect\QuickConnectSupport.exe`, followed by `python312.dll`, `python3.dll`, `vcruntime140.dll` and the rest of a Python runtime.
+Reading from the bottom, the first file is `...\Temp\QuickConnect\QuickConnectSupport.exe`, followed by `python312.dll`, `python3.dll`, `vcruntime140.dll` and the rest of a Python runtime.
 
 !!! finding "Finding · Q005"
     The loader was written to disk as **QuickConnectSupport.exe**.
@@ -30,11 +30,11 @@ The first file is `...\Temp\QuickConnect\QuickConnectSupport.exe`, followed by `
 Windows executables carry an `OriginalFileName` in their version info, and Sysmon records it. When it doesn't match the name on disk, the file was renamed.
 
 ```bql
-bifract_category="process_creation" image=~"\\Temp\\QuickConnect\\" | sort(timestamp) | table(timestamp, image, original_file_name, company, trusted, process_guid)
+bifract_category="process_creation" image=~"\\Temp\\QuickConnect\\" | table(timestamp, image, original_file_name, company, trusted, process_guid)
 ```
 <!-- shot: q006-loader-identity | The loader's original file name, publisher and signature. | rows=2 -->
 
-`QuickConnectSupport.exe` is really **`pythonw.exe`**, published by the Python Software Foundation, with a trusted signature. It's a legitimate signed interpreter running under a support-themed name ([T1036](https://attack.mitre.org/techniques/T1036/), Masquerading). The next process, `QuickConnect.Service.exe`, has no original file name and isn't signed.
+`QuickConnectSupport.exe` is really **`pythonw.exe`**, published by the Python Software Foundation, with a trusted signature. It's a legitimate signed interpreter running under a support-themed name ([T1036](https://attack.mitre.org/techniques/T1036/), Masquerading). The other process, `QuickConnect.Service.exe`, has no original file name and isn't signed.
 
 !!! finding "Finding · Q006"
     The loader's original file name is **pythonw.exe**.
@@ -55,9 +55,9 @@ A portable ("embeddable") Python reads a `._pth` file next to the interpreter to
 Sysmon's file create rule didn't log every file tar wrote. But tar sets each file's timestamp back to the one stored in the archive, and Sysmon logs that as event 2 (file creation time changed). Filter out the DLLs to see what's left:
 
 ```bql
-event_id="2" image=$"\\tar.exe" | target_file!=/\.(pyd|dll)$/i | sort(timestamp) | table(timestamp, target_file, previous_creation_utc_time, creation_utc_time)
+event_id="2" image=$"\\tar.exe" | target_file!=/\.(pyd|dll)$/i | table(timestamp, target_file, previous_creation_utc_time, creation_utc_time)
 ```
-<!-- shot: q007-tar-event2 | Non-DLL files tar restored, oldest first. | rows=6 -->
+<!-- shot: q007-tar-event2 | Non-DLL files tar restored, newest first. | rows=6 -->
 
 There are six files: the renamed interpreter, `LICENSE.txt`, `python312.zip`, `python.cat`, **`python312._pth`** and `DocumentResources.dat`.
 
@@ -65,13 +65,21 @@ There are six files: the renamed interpreter, `LICENSE.txt`, `python312.zip`, `p
     The path configuration file is **python312._pth**.
 
 !!! info "Not timestomping"
-    Event 2 often catches attackers back-dating files. Here it's tar restoring the timestamps stored in the archive, which it does for every file it extracts. Event 2 has no `bifract_category`, so filter it by `event_id`.
+    Event 2 often catches attackers back-dating files. Here it's tar restoring the timestamps stored in the archive, which it does for every file it extracts.
 
 ## The extra file <span class="q-ref">Q008</span> { #q008 }
 
 A stock embeddable Python ships `python312.zip`, `python312._pth`, `python.cat` and `LICENSE.txt`. One file in the list isn't part of Python: **`DocumentResources.dat`**, written right after the `._pth`.
 
-That's the attacker's code. It's a zip archive with a harmless-looking extension, and the `._pth` puts it on Python's import path. The stock `python312._pth` lists `python312.zip` and ends with `#import site`, commented out. The attacker adds `DocumentResources.dat` as a path and uncomments `import site`. On startup Python imports the `site` module, which loads `sitecustomize` from anywhere on the path, including inside the `.dat`. The attacker's code runs before any script, and the process starts with nothing on its command line but the executable.
+That's the attacker's code. It's a zip archive with a harmless-looking extension, and the `._pth` puts it on Python's import path. The stock `python312._pth` lists `python312.zip` and ends with `#import site`, commented out. The attacker adds `DocumentResources.dat` as a path and uncomments `import site`. On startup Python imports the `site` module, which loads `sitecustomize` from anywhere on the path, including inside the `.dat`. The attacker's code runs before any script, and the process starts with nothing on its command line.
+
+```text
+pythonw.exe
+python312._pth (modified)
+DocumentResources.dat (zip archive, attacker placed)
+    - sitecustomize.py
+    - QuickConnect.Service.exe
+```
 
 This technique comes from a real intrusion Black Hills ActiveSOC wrote up in [A Loader With No Command Line](https://activesoc.blackhillsinfosec.com/blog/a-loader-with-no-command-line/), which used the same `DocumentResources.dat` name.
 
@@ -120,8 +128,5 @@ event_id="1" tlsh=* | tlsh(field=tlsh, dict="celes_tlsh", threshold=50) | match(
 <!-- shot: q009-tlsh | The only program within 50 of a public attack tool. | rows=1 -->
 
 Of the 245 process starts, only the implant comes within 50 of a known attack tool. Its closest match is Merlin, an open source C2 written in Go, at a distance of 44. That doesn't make it Merlin. It's a Sliver implant, and the list holds released Sliver servers and clients rather than implants, so the closest Sliver build is 63 away. TLSH only says this binary looks a lot like a Go C2 framework, which is enough reason to look closer.
-
-!!! info "The bundle's alert doesn't fire here"
-    The bundle also adds an alert, **Untrusted Binary Similar to an Attack Tool**, which only checks unsigned programs. It reads the signing status from a field named `authenticode_trusted`, but this lab stores it as `trusted`, so the alert never matches. Add `trusted="untrusted"` to the search above and you get the same single row: the implant is also the only unsigned program with a digest. A close match on a program that also isn't signed is a much stronger signal than either one on its own.
 
 Next: [the attacker's hands on the keyboard](04-hands-on-keyboard.md).

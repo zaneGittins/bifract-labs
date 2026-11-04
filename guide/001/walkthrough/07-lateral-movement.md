@@ -29,7 +29,7 @@ The account is used against WS03 again on Oct 30 (01:28 and 11:08), so the attac
 Workstations talk SMB to the domain controller all day, for group policy and logon scripts. They rarely talk SMB to each other. `mesh()` draws every source and destination pair as a network, so the odd link stands out:
 
 ```bql
-channel="conn" dst_port="445" cidr(src_ip, "10.1.10.0/24") cidr(dst_ip, "10.1.10.0/24") | groupBy(src_ip, dst_ip) | mesh(src=src_ip, dst=dst_ip)
+channel="conn" dst_port="445" cidr(src_ip, "10.1.10.0/24") cidr(dst_ip, "10.1.10.0/24") | groupBy(src_ip, dst_ip) | mesh(src=src_ip, dst=dst_ip, directed=true)
 ```
 <!-- shot: q021-mesh | Internal SMB: every workstation to DC01, plus one link from WS02 to WS03. | graph wait=4000 -->
 
@@ -40,9 +40,9 @@ Each workstation (`.21`, `.22`, `.23`) connects to DC01 (`.10`) about 320 times.
 Search for any command that names WS03 as a UNC path (`\\WS03`). In BQL that takes four backslashes:
 
 ```bql
-event_id="1" commandline=~"\\\\WS03" | table(timestamp, hostname, user, original_file_name, commandline) | sort(timestamp)
+event_id="1" commandline=~"\\\\WS03" | table(timestamp, hostname, user, original_file_name, commandline)
 ```
-<!-- shot: q022-unc | Every command that targets \\WS03, in order. | rows=10 -->
+<!-- shot: q022-unc | Every command that targets \\WS03, newest first. | rows=10 -->
 
 This shows the whole sequence: the spray loop, each `net use`, and at 15:28:45:
 
@@ -83,6 +83,21 @@ A Defender driver (`KslD`) is installed on every workstation. Only WS03 has `PAE
 
 !!! finding "Finding · Q024"
     The service name is **PAExec-6740-WS02** ([T1569.002](https://attack.mitre.org/techniques/T1569/002/)).
+
+### Optional: the copy and the service on one connection
+
+Zeek sees both halves of this on the wire. `smb_files` logs the file written to the share, and `dce_rpc` logs the calls to the Service Control Manager. `chain()` links them when they share a connection ID (`uid`) within five minutes:
+
+```bql
+channel="dce_rpc" OR channel="smb_files"
+| chain(uid, within=5m) {
+    channel="dce_rpc" | operation=~CreateService,StartService,DeleteService,OpenServiceW,OpenSCManager2,ControlService,CreateWowService;
+    channel="smb_files" | name=$exe,dll,ps1,bat,tmp,txt;
+}
+```
+<!-- shot: q024-chain | One SMB connection from WS02 to WS03 carries the service calls and the PAExec copy. | click=1 -->
+
+There's one match. Click it to see the chain: on the same connection, WS02 opens the Service Control Manager on WS03 (`OpenSCManager2`) and opens `PAExec-6740-WS02.exe` on `ADMIN$`. Filter `dce_rpc` on that `uid` to see the rest of the service calls, including `CreateWowService` and `StartServiceW`.
 
 ## Running as SYSTEM <span class="q-ref">Q025</span> { #q025 }
 

@@ -34,11 +34,11 @@ It has RustDesk and PAExec (which LOLRMM lists as a PsExec clone), both new on O
 
 ## What's beaconing?
 
-An implant usually checks in with its command and control (C2) server on a timer, and people don't. That regular check-in is called **beaconing**. Attackers add **jitter**, a random amount added to or taken off the sleep time between check-ins, but the rhythm still shows. Here is one hour on WS02:
+An implant usually checks in with its command and control (C2) server on a timer. That regular check-in is called **beaconing**. Attackers add **jitter**, a random amount added to or taken off the sleep time between check-ins, but the rhythm still shows. Here is one hour on WS02:
 
 <!-- beacon: labs/001/figures/beacon-hour.tsv | One hour on WS02, Oct 30, 2026 (UTC). Each tick is one connection, and taller ticks sent more bytes. The C2 checks in about every 30 seconds, always with nearly the same size. People's traffic comes in bursts. -->
 
-The `outbound_beacons` model scores every internal to external pair by how regular its timing and sizes are.
+The `outbound_beacons` model scores every internal to external pair by how regular its timing and sizes are. It's the same idea behind Active Countermeasures' [RITA](https://github.com/activecm/rita), which scores Zeek logs for beacons, and their [blog](https://www.activecountermeasures.com/blog/) covers beacon hunting in depth.
 
 Network models score a rolling window that ends now, so a dataset from the past needs a one-time **Score range** ([setup](../setup.md#add-the-models), step 4). Then open the model:
 
@@ -53,6 +53,23 @@ Two pairs out of 949 cross the threshold, and both come from `10.1.10.22`, which
 
 !!! tip "Tuning out the known good"
     The model's source query drops time sync (`dst_port!="123"`), multicast and internal destinations. Without that, DC01's NTP syncs top the list, because they're regular by design.
+
+## Which process is beaconing?
+
+Zeek only sees IP addresses. Sysmon event 3 logs the same connections with the process and user behind them, so look each one up in the model:
+
+```bql
+event_id=3
+| !isPrivateIP(dst_ip)
+| modelLookup(model="outbound_beacons", key=[src_ip, dst_ip, dst_port])
+| beacon_score > 0.8
+| groupBy(computer_name, user, image, dst_ip, beacon_score)
+```
+<!-- shot: model-beacons-endpoint | The beaconing pairs matched to the processes on WS02. | rows=5 -->
+
+All five rows are jen.walker on WS02. Greenshot made 2,494 of the connections to `203.0.113.87`, and the implant in `Temp` shows up once. RustDesk owns the `192.0.2.146` pair. A screenshot tool talking to a beaconing destination is worth following, and [chapter 5](05-persistence.md) does.
+
+The `tasklist.exe` row is a Sysmon quirk. That tasklist exited at 14:50, and Greenshot started a minute later with the same process ID, 1240. Sysmon logged Greenshot's first two connections before its process start, under the old name.
 
 ## What stays connected too long?
 
@@ -78,14 +95,14 @@ The three rarest rows are all on WS02: `cmd.exe`, `powershell.exe` and `Greensho
 
 ## First user <span class="q-ref">Q002</span> { #q002 }
 
-Next I filter to those shells and sort them by time.
+Next I filter to those shells. Bifract lists results newest first.
 
 ```bql
-bifract_category="process_creation" parent_image=$"\\explorer.exe" image=~powershell,cmd | sort(timestamp) | table(timestamp, computer_name, user, image, process_guid)
+bifract_category="process_creation" parent_image=$"\\explorer.exe" image=~powershell,cmd | table(timestamp, computer_name, user, image, process_guid)
 ```
-<!-- shot: q002-first-shell | Explorer-launched shells on WS02, oldest first. | rows=4 -->
+<!-- shot: q002-first-shell | Explorer-launched shells on WS02, newest first. | rows=4 -->
 
-The earliest is PowerShell at **2026-10-29 14:02:27**, run by `meridian\jen.walker`.
+The earliest, at the bottom, is PowerShell at **2026-10-29 14:02:27**, run by `meridian\jen.walker`.
 
 !!! finding "Finding · Q002"
     The first suspicious process tree belongs to **MERIDIAN\jen.walker**.

