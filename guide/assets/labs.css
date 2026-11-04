@@ -610,7 +610,9 @@ body { background: var(--lb-bg); }
 .lb-net text.ip { font-family: var(--md-code-font-family); }
 .lb-net text.role, .lb-net text.lbl { fill: var(--lb-muted); }
 @media (max-width: 44.9em) { .md-typeset .lb-net { grid-template-columns: 1fr; } }
-.md-typeset .lb-net--one { grid-template-columns: 1fr; }
+.md-typeset .lb-net--one { grid-template-columns: 1fr; justify-items: center; }
+.md-typeset .lb-net--one svg { max-width: 26rem; }
+.md-typeset figure.lb-fig:has(.lb-net--one) { width: auto; }
 .lb-net text.hl { fill: var(--lb-alert); }
 
 /* Beacon timeline */
