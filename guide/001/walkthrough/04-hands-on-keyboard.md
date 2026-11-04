@@ -71,7 +71,7 @@ bifract_category="network_connect" | image=~QuickConnect,rustdesk | groupBy(comp
 Back to the Run dialog history from chapter 2:
 
 ```bql
-event_id="13" target_object=~"\\RunMRU\\" | target_object!=$"MRUList" | sort(timestamp) | table(timestamp, computer_name, image, details)
+event_id="13" target_object=~"\\RunMRU\\" | target_object!=$"MRUList" | table(timestamp, computer_name, image, details)
 ```
 <!-- shot: q013-runmru | The second and third Run entries come after RustDesk connects. | rows=3 -->
 

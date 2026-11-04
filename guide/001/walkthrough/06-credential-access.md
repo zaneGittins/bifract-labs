@@ -6,14 +6,14 @@ title: "6. Credential access"
 
 # Credential access
 
-<p class="lb-lede">jen.walker is a regular user, so to go further the attacker needed an account that can do more. This starts with the <code>net use</code> loop from chapter 4.</p>
+<p class="lb-lede">Jen Walker is a regular user, so to move laterally, the attacker needed an account with elevated privileges. This starts with the <code>net use</code> loop from chapter 4.</p>
 
 ## The sprayed password <span class="q-ref">Q017</span> { #q017 }
 
 `net use` with `/user:` takes a password on the command line, and Sysmon records command lines:
 
 ```bql
-bifract_category="process_creation" | image=$"\\net.exe" | commandline=~"/user:" | table(timestamp, computer_name, user, commandline) | sort(timestamp)
+bifract_category="process_creation" | image=$"\\net.exe" | commandline=~"/user:" | table(timestamp, computer_name, user, commandline)
 ```
 <!-- shot: q017-net-use | Four net use attempts against WS03, about 16 seconds apart. | rows=4 -->
 
@@ -63,6 +63,16 @@ event_id="4624" ip_address="10.1.10.22" | groupBy(computer_name, target_user_nam
 <!-- shot: q020-4624 | Successful logons from WS02. | rows=3 -->
 
 WS02's machine account and jen.walker log on to DC01 all the time. The new row is **svc.wksdeploy**: a network logon (type 3) on **WS03**, 15 times, first at 15:20:06. It matches the only successful AS request in the Zeek output.
+
+WS02 keeps its own record of the account being used. Logon type 9 (NewCredentials) is what `runas /netonly` and tools like PAExec create: the process keeps the user's identity on the local host but sends other credentials over the network.
+
+```bql
+computer_name=~WS02 subject_user_name=~jen.walker event_id=4624 logon_type=9
+| table(timestamp, computer_name, subject_user_name, target_outbound_user_name, process_name)
+```
+<!-- shot: q020-logon-type9 | PAExec on WS02 runs as jen.walker with svc.wksdeploy as its network account. | rows=1 -->
+
+At 15:28:45, `PAExec.exe` running as jen.walker sets `svc.wksdeploy` as its outbound account. That's the start of the lateral movement in [chapter 7](07-lateral-movement.md#q022).
 
 !!! finding "Finding · Q020"
     The sprayed password was valid for **MERIDIAN\svc.wksdeploy**. Deployment accounts like this usually have local admin on workstations.

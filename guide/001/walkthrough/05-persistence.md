@@ -66,7 +66,7 @@ reg.exe add HKCU\Software\Microsoft\Windows\CurrentVersion\Run /v Greenshot /t R
 Pivot from the DLL's folder to every file written there:
 
 ```bql
-bifract_category="file_write" | target_file=~"\\AppData\\Roaming\\Greenshot\\" | table(timestamp, computer_name, image, target_file) | sort(timestamp)
+bifract_category="file_write" | target_file=~"\\AppData\\Roaming\\Greenshot\\" | table(timestamp, computer_name, image, target_file)
 ```
 <!-- shot: q016-plugins | Files the implant dropped into Greenshot's user folder. | rows=2 -->
 
@@ -74,6 +74,14 @@ The implant wrote two DLLs, at 14:36 and 14:39, before relaunching Greenshot at 
 
 !!! finding "Finding · Q016"
     The staged DLLs are **Greenshot.Plugin.QuickConnect.dll** and **QuickConnect.ImageCache.dll**.
+
+Both DLLs are the attacker's. Greenshot loads any `Greenshot.Plugin.*.dll` it finds in its plugin folders, which include `%APPDATA%\Greenshot\`. The malicious plugin then loads the Sliver implant:
+
+```text
+Greenshot.exe
+    Greenshot.Plugin.QuickConnect.dll (malicious plugin)
+        QuickConnect.ImageCache.dll (Sliver implant)
+```
 
 Only `QuickConnect.ImageCache.dll` has an image load event, so event 7 alone won't find both. Following the folder does.
 
