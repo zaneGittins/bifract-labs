@@ -13,7 +13,8 @@ title: "3. The loader"
 Sysmon event 11 records file creation. Filter to the files `tar.exe` wrote:
 
 ```bql
-event_id=11 image=$"\\tar.exe" | table(timestamp, computer_name, user, target_file)
+event_id=11 image=$"\\tar.exe"
+| table(timestamp, computer_name, user, target_file)
 ```
 <!-- shot: q005-tar-writes | Files tar created in the user's Temp folder. | rows=9 -->
 
@@ -30,7 +31,8 @@ Reading from the bottom, the first file is `...\Temp\QuickConnect\QuickConnectSu
 Windows executables carry an `OriginalFileName` in their version info, and Sysmon records it. When it doesn't match the name on disk, the file was renamed.
 
 ```bql
-bifract_category="process_creation" image=~"\\Temp\\QuickConnect\\" | table(timestamp, image, original_file_name, company, trusted, process_guid)
+bifract_category="process_creation" image=~"\\Temp\\QuickConnect\\"
+| table(timestamp, image, original_file_name, company, trusted, process_guid)
 ```
 <!-- shot: q006-loader-identity | The loader's original file name, publisher and signature. | rows=2 -->
 
@@ -43,7 +45,12 @@ bifract_category="process_creation" image=~"\\Temp\\QuickConnect\\" | table(time
     Compare each executable's name on disk with its original file name across the whole fleet:
 
     ```bql
-    bifract_category="process_creation" original_file_name=* original_file_name!="-" | exe := lower(splitAt(image, "\\", -1)) | ofn := lower(original_file_name) | exe != field(ofn) | groupBy(computer_name, exe, ofn, trusted) | sort(_count)
+    bifract_category="process_creation" original_file_name=* original_file_name!="-"
+    | exe := lower(splitAt(image, "\\", -1))
+    | ofn := lower(original_file_name)
+    | exe != field(ofn)
+    | groupBy(computer_name, exe, ofn, trusted)
+    | sort(_count)
     ```
 
     You get about 37 rows. Most are benign (Edge installers, `usoclient`, `wermgr`, `tar.exe` as `bsdtar`), but `quickconnectsupport.exe` shows up twice on WS02: once as `pythonw.exe` and once as `rustdesk.exe`. Comparing one field to another needs `field()`.
@@ -55,7 +62,9 @@ A portable ("embeddable") Python reads a `._pth` file next to the interpreter to
 Sysmon's file create rule didn't log every file tar wrote. But tar sets each file's timestamp back to the one stored in the archive, and Sysmon logs that as event 2 (file creation time changed). Filter out the DLLs to see what's left:
 
 ```bql
-event_id="2" image=$"\\tar.exe" | target_file!=/\.(pyd|dll)$/i | table(timestamp, target_file, previous_creation_utc_time, creation_utc_time)
+event_id="2" image=$"\\tar.exe"
+| target_file!=/\.(pyd|dll)$/i
+| table(timestamp, target_file, previous_creation_utc_time, creation_utc_time)
 ```
 <!-- shot: q007-tar-event2 | Non-DLL files tar restored, newest first. | rows=6 -->
 
@@ -73,13 +82,7 @@ A stock embeddable Python ships `python312.zip`, `python312._pth`, `python.cat` 
 
 That's the attacker's code. It's a zip archive with a harmless-looking extension, and the `._pth` puts it on Python's import path. The stock `python312._pth` lists `python312.zip` and ends with `#import site`, commented out. The attacker adds `DocumentResources.dat` as a path and uncomments `import site`. On startup Python imports the `site` module, which loads `sitecustomize` from anywhere on the path, including inside the `.dat`. The attacker's code runs before any script, and the process starts with nothing on its command line.
 
-```text
-pythonw.exe
-python312._pth (modified)
-DocumentResources.dat (zip archive, attacker placed)
-    - sitecustomize.py
-    - QuickConnect.Service.exe
-```
+<!-- figure: labs/001/figures/loader.html | What runs when the loader starts. -->
 
 This technique comes from a real intrusion Black Hills ActiveSOC wrote up in [A Loader With No Command Line](https://activesoc.blackhillsinfosec.com/blog/a-loader-with-no-command-line/), which used the same `DocumentResources.dat` name.
 
@@ -105,7 +108,8 @@ ptg(start="9D045BEA-5269-6AE3-CC3D-000000001100", direction=forward, depth=1)
 `pgr()` goes further than `ptg()`. It rebuilds the process tree, scores each file, network and DNS action by how rare it is on other hosts, and hides the everyday noise. Start it on the loader and draw it with `pgraph()`:
 
 ```bql
-pgr(start="9D045BEA-5269-6AE3-CC3D-000000001100") | pgraph()
+pgr(start="9D045BEA-5269-6AE3-CC3D-000000001100")
+| pgraph()
 ```
 <!-- shot: q009-pgr | The provenance graph from the loader. Red marks actions rare across the fleet. | graph wait=9000 -->
 
@@ -123,7 +127,10 @@ In this lab, Velociraptor's `Windows.EventLogs.SysmonProcessEnriched` artifact e
 2. Open `tlsh_index` and **Backfill** from **Oct 27, 2026** to **Nov 1, 2026**.
 
 ```bql
-event_id="1" tlsh=* | tlsh(field=tlsh, dict="celes_tlsh", threshold=50) | match(dict="celes_tlsh", field=tlsh_match, column=TLSH_Hash, include=[Repo_Name]) | table(timestamp, computer_name, image, tlsh_distance, Repo_Name)
+event_id="1" tlsh=*
+| tlsh(field=tlsh, dict="celes_tlsh", threshold=50)
+| match(dict="celes_tlsh", field=tlsh_match, column=TLSH_Hash, include=[Repo_Name])
+| table(timestamp, computer_name, image, tlsh_distance, Repo_Name)
 ```
 <!-- shot: q009-tlsh | The only program within 50 of a public attack tool. | rows=1 -->
 

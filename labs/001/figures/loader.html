@@ -1,0 +1,30 @@
+<div class="lb-net lb-net--one">
+<svg viewBox="0 0 360 398" role="img" aria-label="QuickConnectSupport.exe, a signed pythonw.exe, starts with nothing on its command line and reads python312._pth. The attacker added DocumentResources.dat as a path and uncommented import site. The site module loads sitecustomize.py from inside DocumentResources.dat, a zip archive the attacker placed. sitecustomize.py extracts QuickConnect.Service.exe and starts it.">
+<rect class="box" x="4" y="4" width="352" height="46" rx="5"/>
+<text class="host" x="16" y="23">QuickConnectSupport.exe</text>
+<text class="role" x="16" y="40">signed pythonw.exe, nothing on the command line</text>
+<path class="flow" d="M180 50V82M174 76L180 82L186 76"/>
+<text class="lbl" x="190" y="70">reads</text>
+<rect class="box" x="4" y="84" width="352" height="96" rx="5"/>
+<text class="host" x="16" y="103">python312._pth</text>
+<text class="ip" x="16" y="122">python312.zip</text>
+<text class="ip" x="16" y="137">.</text>
+<text class="ip hl" x="16" y="152">DocumentResources.dat</text>
+<text class="role hl" x="344" y="152" text-anchor="end">added</text>
+<text class="ip hl" x="16" y="167">import site</text>
+<text class="role hl" x="344" y="167" text-anchor="end">uncommented</text>
+<path class="flow" d="M180 180V212M174 206L180 212L186 206"/>
+<text class="lbl" x="190" y="200">site loads sitecustomize</text>
+<rect class="box" x="4" y="214" width="352" height="100" rx="5"/>
+<text class="host" x="16" y="233">DocumentResources.dat</text>
+<text class="role" x="16" y="250">zip archive, placed by the attacker</text>
+<path class="wire" d="M22 258V289M22 271H32M22 289H32"/>
+<text class="ip" x="38" y="275">sitecustomize.py</text>
+<text class="ip" x="38" y="293">QuickConnect.Service.exe</text>
+<path class="flow" d="M180 314V346M174 340L180 346L186 340"/>
+<text class="lbl" x="190" y="334">extracts it and starts it</text>
+<rect class="box" x="4" y="348" width="352" height="46" rx="5"/>
+<text class="host" x="16" y="367">QuickConnect.Service.exe</text>
+<text class="role" x="16" y="384">the implant</text>
+</svg>
+</div>
