@@ -84,7 +84,9 @@ The top pair is the same `192.0.2.146` destination the beacon model found, on Ru
 To confirm it without models, stack every program that the Windows shell (`explorer.exe`) started on each host, rarest first. Normal apps repeat on every workstation, so a program started once is worth a look.
 
 ```bql
-bifract_category="process_creation" parent_image=$"\\explorer.exe" | groupBy(computer_name, image) | sort(_count)
+bifract_category="process_creation" parent_image=$"\\explorer.exe"
+| groupBy(computer_name, image)
+| sort(_count)
 ```
 <!-- shot: q001-explorer-children | Programs started directly by Explorer, rarest first. | rows=8 -->
 
@@ -98,7 +100,8 @@ The three rarest rows are all on WS02: `cmd.exe`, `powershell.exe` and `Greensho
 Next I filter to those shells. Bifract lists results newest first.
 
 ```bql
-bifract_category="process_creation" parent_image=$"\\explorer.exe" image=~powershell,cmd | table(timestamp, computer_name, user, image, process_guid)
+bifract_category="process_creation" parent_image=$"\\explorer.exe" image=~powershell,cmd
+| table(timestamp, computer_name, user, image, process_guid)
 ```
 <!-- shot: q002-first-shell | Explorer-launched shells on WS02, newest first. | rows=4 -->
 

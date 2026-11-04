@@ -27,7 +27,8 @@ title: "Lab 001 walkthrough"
 
 ```bql
 bifract_category="process_creation" parent_image=$"\\explorer.exe"
-  | groupBy(computer_name, image) | sort(_count)
+| groupBy(computer_name, image)
+| sort(_count)
 ```
 
 Queries are [BQL](https://docs.bifract.io/bql/basics/): filters first, then a pipe into each transform. The [field reference](../fields.md) lists the main fields by source. Under each query is a screenshot of what you should see. A purple box sums up what the step found:

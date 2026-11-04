@@ -13,7 +13,10 @@ title: "4. Hands on keyboard"
 Admins and scripts run discovery tools all the time, almost always through `cmd.exe`. On WS02, RustDesk alone runs `tasklist` through `cmd /C` about 48,000 times. So I look for discovery tools whose parent **isn't** a shell:
 
 ```bql
-bifract_category="process_creation" | image=~whoami,ipconfig,hostname,systeminfo,"\\net.exe",nltest,tasklist | parent_image!=$"\\cmd.exe" | groupBy(computer_name, parent_image, image)
+bifract_category="process_creation"
+| image=~whoami,ipconfig,hostname,systeminfo,"\\net.exe",nltest,tasklist
+| parent_image!=$"\\cmd.exe"
+| groupBy(computer_name, parent_image, image)
 ```
 <!-- shot: q010-discovery | Discovery tools started directly by something other than cmd.exe. | rows=6 -->
 
@@ -34,8 +37,12 @@ There are six rows and only two tools: `whoami.exe` and `ipconfig.exe`, both wit
 The implants also started `cmd.exe` as a wrapper. To see what each wrapper ran, I collect their GUIDs in a binding and look for their children:
 
 ```bql
-let &wrappers := bifract_category="process_creation" parent_image=~QuickConnect,Greenshot image=$"\\cmd.exe" | table(process_guid);
-bifract_category="process_creation" | in(parent_process_guid, &wrappers) | image!=$"\\conhost.exe" | groupBy(computer_name, parent_image, parent_commandline, image)
+let &wrappers := bifract_category="process_creation" parent_image=~QuickConnect,Greenshot image=$"\\cmd.exe"
+| table(process_guid);
+bifract_category="process_creation"
+| in(parent_process_guid, &wrappers)
+| image!=$"\\conhost.exe"
+| groupBy(computer_name, parent_image, parent_commandline, image)
 ```
 <!-- shot: q011-wrappers | What the implants' cmd.exe wrappers ran. | rows=4 -->
 
@@ -52,14 +59,19 @@ bifract_category="process_creation" | in(parent_process_guid, &wrappers) | image
 Chapter 1's first seen model already flagged a second `QuickConnectSupport.exe`. Here are the two side by side:
 
 ```bql
-bifract_category="process_creation" | image=$"\\QuickConnectSupport.exe" | groupBy(image, original_file_name, product, description)
+bifract_category="process_creation"
+| image=$"\\QuickConnectSupport.exe"
+| groupBy(image, original_file_name, product, description)
 ```
 <!-- shot: q012-two-identities | Two different binaries with the same file name. | rows=2 -->
 
 It's the same file name for two programs: the Python loader in `Temp`, and **RustDesk Remote Desktop** in `AppData\Local\Programs\QuickConnect Support\`. RustDesk is open source remote desktop software that can use any relay server, including one the attacker runs.
 
 ```bql
-bifract_category="network_connect" | image=~QuickConnect,rustdesk | groupBy(computer_name, image, dst_ip, dst_port) | sort(_count, order=desc)
+bifract_category="network_connect"
+| image=~QuickConnect,rustdesk
+| groupBy(computer_name, image, dst_ip, dst_port)
+| sort(_count, order=desc)
 ```
 <!-- shot: q012-rustdesk-net | RustDesk connects to 192.0.2.146 on its rendezvous and relay ports. | rows=8 -->
 
@@ -71,7 +83,9 @@ bifract_category="network_connect" | image=~QuickConnect,rustdesk | groupBy(comp
 Back to the Run dialog history from chapter 2:
 
 ```bql
-event_id="13" target_object=~"\\RunMRU\\" | target_object!=$"MRUList" | table(timestamp, computer_name, image, details)
+event_id="13" target_object=~"\\RunMRU\\"
+| target_object!=$"MRUList"
+| table(timestamp, computer_name, image, details)
 ```
 <!-- shot: q013-runmru | The second and third Run entries come after RustDesk connects. | rows=3 -->
 

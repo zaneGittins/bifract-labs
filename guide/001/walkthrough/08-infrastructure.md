@@ -16,14 +16,18 @@ title: "8. Infrastructure and scope"
 Zeek logs every DNS query on the network. Here's what WS02 looked up most:
 
 ```bql
-channel="dns" src_ip="10.1.10.22" | groupBy(query) | sort(_count, order=desc) | head(10)
+channel="dns" src_ip="10.1.10.22"
+| groupBy(query)
+| sort(_count, order=desc)
+| head(10)
 ```
 <!-- shot: q026-dns-top | WS02's most queried names. Two aren't Microsoft. | rows=10 -->
 
 Two unfamiliar names rank above every Microsoft service, each queried thousands of times. Sysmon ties each one to a process:
 
 ```bql
-event_id="22" query=~"update-cache","support-assist" | groupBy(hostname, image, query, query_results)
+event_id="22" query=~"update-cache","support-assist"
+| groupBy(hostname, image, query, query_results)
 ```
 <!-- shot: q026-dns-process | Which process resolved each domain, and to what. | rows=4 -->
 
@@ -35,7 +39,8 @@ PowerShell (for the download) and the implants look up `update-cache-m9tdco18phm
 ## Domains to IPs <span class="q-ref">Q027</span> { #q027 }
 
 ```bql
-channel="dns" query=~"update-cache-m9tdco18phmc.com","support-assist-7wfncs.online" answers=* | groupBy(query, answers)
+channel="dns" query=~"update-cache-m9tdco18phmc.com","support-assist-7wfncs.online" answers=*
+| groupBy(query, answers)
 ```
 <!-- shot: q027-answers | What each attacker domain resolved to. | rows=2 -->
 
@@ -45,7 +50,9 @@ channel="dns" query=~"update-cache-m9tdco18phmc.com","support-assist-7wfncs.onli
 ## The C2 channel <span class="q-ref">Q028</span> { #q028 }
 
 ```bql
-event_id="3" dst_ip="203.0.113.87" | groupBy(hostname, image, dst_port) | sort(_count, order=desc)
+event_id="3" dst_ip="203.0.113.87"
+| groupBy(hostname, image, dst_port)
+| sort(_count, order=desc)
 ```
 <!-- shot: q028-8888 | Everything that connected to 203.0.113.87, by port. | rows=5 -->
 
@@ -61,7 +68,9 @@ Greenshot, the implant on both hosts, and two connections Sysmon attributes to `
 RustDesk uses a few ports on its server: **21116** for the rendezvous (ID) server, where the client registers and finds its peer, **21117** for the relay that carries the session, and **21115** for a NAT type test at startup. Look at completed connections only:
 
 ```bql
-channel="conn" dst_ip="192.0.2.146" conn_state="SF" | groupBy(dst_port, function=multi(count(), max(duration, as=longest), max(orig_bytes, as=max_out))) | sort(dst_port)
+channel="conn" dst_ip="192.0.2.146" conn_state="SF"
+| groupBy(dst_port, function=multi(count(), max(duration, as=longest), max(orig_bytes, as=max_out)))
+| sort(dst_port)
 ```
 <!-- shot: q029-rustdesk-ports | Completed connections to the relay server, by port. | rows=3 -->
 
@@ -79,7 +88,9 @@ Zeek also shows thousands of unanswered attempts to 21114 (`S0`), which don't co
 Sysmon confirms the full set of ports the RustDesk client reached:
 
 ```bql
-event_id="3" image=~rustdesk dst_ip="192.0.2.146" | groupBy(dst_port, function=multi(count(), min(timestamp, as=first))) | sort(_count, order=desc)
+event_id="3" image=~rustdesk dst_ip="192.0.2.146"
+| groupBy(dst_port, function=multi(count(), min(timestamp, as=first)))
+| sort(_count, order=desc)
 ```
 <!-- shot: q030-rustdesk-sysmon | RustDesk's connections to the relay server from Sysmon. | rows=3 -->
 
@@ -91,7 +102,9 @@ event_id="3" image=~rustdesk dst_ip="192.0.2.146" | groupBy(dst_port, function=m
 To scope it, I use endpoint logs: which processes on which hosts reached the C2 port?
 
 ```bql
-event_id="3" dst_ip="203.0.113.87" dst_port="8888" | groupBy(hostname, user, image, function=multi(count(), min(timestamp, as=first), max(timestamp, as=last))) | sort(first)
+event_id="3" dst_ip="203.0.113.87" dst_port="8888"
+| groupBy(hostname, user, image, function=multi(count(), min(timestamp, as=first), max(timestamp, as=last)))
+| sort(first)
 ```
 <!-- shot: q031-callbacks | Every C2 callback by host and process. | rows=4 -->
 

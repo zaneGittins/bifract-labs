@@ -13,7 +13,8 @@ title: "7. Lateral movement"
 Pivot from the account to everywhere it logged on:
 
 ```bql
-event_id="4624" target_user_name="svc.wksdeploy" | groupBy(computer_name, ip_address, logon_type, function=multi(count(), min(timestamp, as=first)))
+event_id="4624" target_user_name="svc.wksdeploy"
+| groupBy(computer_name, ip_address, logon_type, function=multi(count(), min(timestamp, as=first)))
 ```
 <!-- shot: q021-svc-logons | svc.wksdeploy only logged on to WS03, and only from WS02. | rows=1 -->
 
@@ -29,7 +30,9 @@ The account is used against WS03 again on Oct 30 (01:28 and 11:08), so the attac
 Workstations talk SMB to the domain controller all day, for group policy and logon scripts. They rarely talk SMB to each other. `mesh()` draws every source and destination pair as a network, so the odd link stands out:
 
 ```bql
-channel="conn" dst_port="445" cidr(src_ip, "10.1.10.0/24") cidr(dst_ip, "10.1.10.0/24") | groupBy(src_ip, dst_ip) | mesh(src=src_ip, dst=dst_ip, directed=true)
+channel="conn" dst_port="445" cidr(src_ip, "10.1.10.0/24") cidr(dst_ip, "10.1.10.0/24")
+| groupBy(src_ip, dst_ip)
+| mesh(src=src_ip, dst=dst_ip, directed=true)
 ```
 <!-- shot: q021-mesh | Internal SMB: every workstation to DC01, plus one link from WS02 to WS03. | graph wait=4000 -->
 
@@ -40,7 +43,8 @@ Each workstation (`.21`, `.22`, `.23`) connects to DC01 (`.10`) about 320 times.
 Search for any command that names WS03 as a UNC path (`\\WS03`). In BQL that takes four backslashes:
 
 ```bql
-event_id="1" commandline=~"\\\\WS03" | table(timestamp, hostname, user, original_file_name, commandline)
+event_id="1" commandline=~"\\\\WS03"
+| table(timestamp, hostname, user, original_file_name, commandline)
 ```
 <!-- shot: q022-unc | Every command that targets \\WS03, newest first. | rows=10 -->
 
@@ -61,7 +65,8 @@ PAExec is an open source PsExec clone. `-c` copies the implant to the target, `-
 Zeek logs every SMB share mapping. Workstations normally only map shares on the domain controller, so leave DC01 out:
 
 ```bql
-channel="smb_mapping" dst_ip!="10.1.10.10" | groupBy(src_ip, dst_ip, path, function=multi(count(), min(timestamp), max(timestamp)))
+channel="smb_mapping" dst_ip!="10.1.10.10"
+| groupBy(src_ip, dst_ip, path, function=multi(count(), min(timestamp), max(timestamp)))
 ```
 <!-- shot: q023-smb | The only share mappings between workstations: WS02 to WS03. | rows=2 -->
 
@@ -75,7 +80,8 @@ channel="smb_mapping" dst_ip!="10.1.10.10" | groupBy(src_ip, dst_ip, path, funct
 List every service installed across the environment (System event 7045):
 
 ```bql
-event_id="7045" | groupBy(hostname, service_name, image_path, account_name)
+event_id="7045"
+| groupBy(hostname, service_name, image_path, account_name)
 ```
 <!-- shot: q024-7045 | Service installs: a Defender driver on each workstation, and PAExec on WS03. | rows=4 -->
 
@@ -104,7 +110,8 @@ There's one match. Click it to see the chain: on the same connection, WS02 opens
 Follow the service binary to what it ran:
 
 ```bql
-event_id="1" hostname="WS03" (image=~paexec OR parent_image=~paexec) | table(timestamp, user, parent_image, image, commandline)
+event_id="1" hostname="WS03" (image=~paexec OR parent_image=~paexec)
+| table(timestamp, user, parent_image, image, commandline)
 ```
 <!-- shot: q025-system | The PAExec service and the implant it started on WS03. | rows=2 -->
 

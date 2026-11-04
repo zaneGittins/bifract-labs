@@ -13,7 +13,9 @@ title: "5. Persistence"
 Programs in `Program Files` normally load DLLs from `Program Files` and `Windows`. One that loads an **unsigned DLL from a user profile** is worth a look. Sysmon event 7 records image loads:
 
 ```bql
-bifract_category="image_load" signed="false" | image_loaded=~"\\Users\\" | groupBy(computer_name, image, image_loaded)
+bifract_category="image_load" signed="false"
+| image_loaded=~"\\Users\\"
+| groupBy(computer_name, image, image_loaded)
 ```
 <!-- shot: q014-image-loads | Unsigned DLLs loaded from user profiles. | rows=2 -->
 
@@ -22,7 +24,8 @@ There are two rows. One is the implant loading itself. The other is **Greenshot*
 Next, what Greenshot does: the processes it starts and where it connects.
 
 ```bql
-(bifract_category="process_creation" parent_image=$"\\Greenshot.exe") OR (bifract_category="network_connect" image=$"\\Greenshot.exe") | groupBy(bifract_category, image, commandline, dst_ip, dst_port)
+(bifract_category="process_creation" parent_image=$"\\Greenshot.exe") OR (bifract_category="network_connect" image=$"\\Greenshot.exe")
+| groupBy(bifract_category, image, commandline, dst_ip, dst_port)
 ```
 <!-- shot: q014-behavior | Greenshot's children and network destinations. | rows=6 -->
 
@@ -36,17 +39,21 @@ A screenshot tool shouldn't run `whoami /all`, `ipconfig /all` and `systeminfo`.
 I compare Run keys across all hosts: which values exist, on which hosts, what wrote them, and when each first appeared.
 
 ```bql
-event_id="13" | contains(target_object, "\\CurrentVersion\\Run")
-  | groupBy(hostname, image, target_object, details,
-      function=multi(selectFirst(timestamp, as=first_seen), count(as=writes)))
-  | sort(first_seen, order=desc)
+event_id="13"
+| contains(target_object, "\\CurrentVersion\\Run")
+| groupBy(hostname, image, target_object, details,
+    function=multi(selectFirst(timestamp, as=first_seen), count(as=writes)))
+| sort(first_seen, order=desc)
 ```
 <!-- shot: q015-run-keys | Every Run and RunOnce value written, newest first. | rows=8 -->
 
 Edge rewrites its `MicrosoftEdgeAutoLaunch_*` value on every workstation, many times. One value is different: `...\CurrentVersion\Run\Greenshot` on WS02, written once by **`reg.exe`** instead of an installer.
 
 ```bql
-bifract_category="process_creation" | image=$"\\reg.exe" | parent_image=~QuickConnect | table(timestamp, computer_name, user, parent_image, commandline)
+bifract_category="process_creation"
+| image=$"\\reg.exe"
+| parent_image=~QuickConnect
+| table(timestamp, computer_name, user, parent_image, commandline)
 ```
 <!-- shot: q015-reg-add | The implant writes the Run value at 14:42:50. | rows=1 -->
 
@@ -66,7 +73,9 @@ reg.exe add HKCU\Software\Microsoft\Windows\CurrentVersion\Run /v Greenshot /t R
 Pivot from the DLL's folder to every file written there:
 
 ```bql
-bifract_category="file_write" | target_file=~"\\AppData\\Roaming\\Greenshot\\" | table(timestamp, computer_name, image, target_file)
+bifract_category="file_write"
+| target_file=~"\\AppData\\Roaming\\Greenshot\\"
+| table(timestamp, computer_name, image, target_file)
 ```
 <!-- shot: q016-plugins | Files the implant dropped into Greenshot's user folder. | rows=2 -->
 

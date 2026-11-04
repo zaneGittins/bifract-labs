@@ -13,7 +13,10 @@ title: "6. Credential access"
 `net use` with `/user:` takes a password on the command line, and Sysmon records command lines:
 
 ```bql
-bifract_category="process_creation" | image=$"\\net.exe" | commandline=~"/user:" | table(timestamp, computer_name, user, commandline)
+bifract_category="process_creation"
+| image=$"\\net.exe"
+| commandline=~"/user:"
+| table(timestamp, computer_name, user, commandline)
 ```
 <!-- shot: q017-net-use | Four net use attempts against WS03, about 16 seconds apart. | rows=4 -->
 
@@ -35,7 +38,10 @@ One password tried against many accounts is a password spray ([T1110.003](https:
 Each `net use` makes WS02 ask the domain controller for a Kerberos ticket (an AS-REQ), which Zeek sees on the wire:
 
 ```bql
-channel="kerberos" request_type="AS" | NOT client=~"$/" | groupBy(src_ip, client, success, error_msg) | sort(client)
+channel="kerberos" request_type="AS"
+| NOT client=~"$/"
+| groupBy(src_ip, client, success, error_msg)
+| sort(client)
 ```
 <!-- shot: q018-kerberos | Kerberos AS requests from WS02, machine accounts removed. | rows=8 -->
 
@@ -44,7 +50,8 @@ channel="kerberos" request_type="AS" | NOT client=~"$/" | groupBy(src_ip, client
 DC01 logs the same failures as event 4771:
 
 ```bql
-event_id="4771" | groupBy(computer_name, target_user_name, status, ip_address)
+event_id="4771"
+| groupBy(computer_name, target_user_name, status, ip_address)
 ```
 <!-- shot: q018-4771 | Status 0x18 means a bad password. All three come from WS02. | rows=3 -->
 
@@ -58,7 +65,8 @@ All three come from `10.1.10.22`, which is WS02.
 List successful logons that came from WS02:
 
 ```bql
-event_id="4624" ip_address="10.1.10.22" | groupBy(computer_name, target_user_name, logon_type, authentication_package_name)
+event_id="4624" ip_address="10.1.10.22"
+| groupBy(computer_name, target_user_name, logon_type, authentication_package_name)
 ```
 <!-- shot: q020-4624 | Successful logons from WS02. | rows=3 -->
 

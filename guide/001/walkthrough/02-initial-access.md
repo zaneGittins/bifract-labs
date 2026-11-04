@@ -13,7 +13,9 @@ title: "2. Initial access"
 When a user presses ++win+r++ and runs something, Explorer writes the command to the `RunMRU` registry key. Sysmon logs the write as event 13 (registry value set).
 
 ```bql
-event_id="13" target_object=~"\\RunMRU\\" | target_object!=$"MRUList" | table(timestamp, computer_name, image, details)
+event_id="13" target_object=~"\\RunMRU\\"
+| target_object!=$"MRUList"
+| table(timestamp, computer_name, image, details)
 ```
 <!-- shot: q003-runmru | Everything typed into the Run dialog, newest first. | rows=3 -->
 
@@ -47,7 +49,8 @@ Here's the command piece by piece:
 Sysmon logged PowerShell looking up the download domain:
 
 ```bql
-bifract_category="dns_query" query=~update-cache | groupBy(computer_name, image, query, function=min(timestamp))
+bifract_category="dns_query" query=~update-cache
+| groupBy(computer_name, image, query, function=min(timestamp))
 ```
 <!-- shot: q004-dns | PowerShell looks up the download domain. | rows=4 -->
 
