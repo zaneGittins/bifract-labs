@@ -1,0 +1,395 @@
+{
+  "schema_version": "1.0",
+  "id": "bifract-labs-002-questions",
+  "lab_id": "002",
+  "title": "Larkspur Baselines",
+  "description": "Practice first seen, rarity and coverage on a month of process creation events.",
+  "dataset": "bifract-labs-002.jsonl.zst",
+  "time_zone": "UTC",
+  "answer_defaults": {
+    "case_sensitive": false,
+    "trim_whitespace": true,
+    "set_order_matters": false
+  },
+  "safety": "Host names are fictional larkspur.internal names and the only public looking IP is from a documentation range. Do not resolve, browse to, or contact anything from this dataset.",
+  "questions": [
+    {
+      "id": "001",
+      "stage": "choose",
+      "title": "One tool, two paths",
+      "difficulty": "easy",
+      "prompt": "How many different QuickAssist.exe image paths are in the dataset?",
+      "answer": {
+        "type": "string",
+        "canonical": "2",
+        "accepted": [
+          "2",
+          "two"
+        ]
+      },
+      "hint": "Group Quick Assist executions by image.",
+      "evidence": {
+        "sources": [
+          "Sysmon process creation"
+        ],
+        "fields": [
+          "image"
+        ]
+      }
+    },
+    {
+      "id": "002",
+      "stage": "choose",
+      "title": "Busiest day",
+      "difficulty": "easy",
+      "prompt": "Which day (UTC) has the most process creation events?",
+      "answer": {
+        "type": "string",
+        "canonical": "October 13th",
+        "accepted": [
+          "October 13",
+          "2026-10-13",
+          "Oct 13",
+          "Oct 13, 2026",
+          "13 Oct",
+          "13 Oct 2026",
+          "October 13, 2026",
+          "2026/10/13",
+          "10/13",
+          "10/13/2026",
+          "October 13th",
+          "Oct 13th",
+          "October 13th, 2026",
+          "13th October",
+          "13th October 2026"
+        ]
+      },
+      "hint": "Bucket events by day with strftime, then sort by count.",
+      "evidence": {
+        "sources": [
+          "Sysmon process creation"
+        ],
+        "fields": [
+          "timestamp"
+        ]
+      }
+    },
+    {
+      "id": "003",
+      "stage": "count",
+      "title": "Most events",
+      "difficulty": "easy",
+      "prompt": "From October 4th to November 3rd, which remote access tool has the most process creation events for Jen?",
+      "answer": {
+        "type": "string",
+        "canonical": "ScreenConnect",
+        "accepted": [
+          "ScreenConnect",
+          "screenconnect",
+          "ConnectWise ScreenConnect"
+        ]
+      },
+      "hint": "Count events per LOLRMM name for Jen, leaving out November 4th.",
+      "evidence": {
+        "sources": [
+          "Sysmon process creation"
+        ],
+        "fields": [
+          "user",
+          "image"
+        ]
+      }
+    },
+    {
+      "id": "004",
+      "stage": "count",
+      "title": "Days, not events",
+      "difficulty": "easy",
+      "prompt": "On how many days from October 4th to November 3rd did Jen run that tool?",
+      "answer": {
+        "type": "string",
+        "canonical": "1",
+        "accepted": [
+          "1",
+          "one"
+        ]
+      },
+      "hint": "Count distinct days, not events.",
+      "evidence": {
+        "sources": [
+          "Sysmon process creation"
+        ],
+        "fields": [
+          "user",
+          "image",
+          "timestamp"
+        ]
+      }
+    },
+    {
+      "id": "005",
+      "stage": "count",
+      "title": "Every day",
+      "difficulty": "easy",
+      "prompt": "On how many days from October 4th to November 3rd did Jen run Quick Assist?",
+      "answer": {
+        "type": "string",
+        "canonical": "30",
+        "accepted": [
+          "30",
+          "thirty"
+        ]
+      },
+      "hint": "Same query, the Quick Assist row.",
+      "evidence": {
+        "sources": [
+          "Sysmon process creation"
+        ],
+        "fields": [
+          "user",
+          "image",
+          "timestamp"
+        ]
+      }
+    },
+    {
+      "id": "006",
+      "stage": "first-seen",
+      "title": "First ScreenConnect",
+      "difficulty": "easy",
+      "prompt": "Which host ran ScreenConnect first?",
+      "answer": {
+        "type": "string",
+        "canonical": "WS02",
+        "accepted": [
+          "WS02",
+          "WS02.larkspur.internal"
+        ]
+      },
+      "hint": "Group on original_file_name per host and take the earliest timestamp.",
+      "evidence": {
+        "sources": [
+          "Sysmon process creation"
+        ],
+        "fields": [
+          "computer_name",
+          "original_file_name"
+        ]
+      }
+    },
+    {
+      "id": "007",
+      "stage": "first-seen",
+      "title": "New on November 4th",
+      "difficulty": "medium",
+      "prompt": "Which user ran a remote access tool for the first time on November 4th?",
+      "answer": {
+        "type": "string",
+        "canonical": "Sam",
+        "accepted": [
+          "Sam",
+          "sam",
+          "larkspur\\sam",
+          "LARKSPUR\\sam"
+        ]
+      },
+      "hint": "Group LOLRMM matches by user and tool name, and take the earliest timestamp.",
+      "evidence": {
+        "sources": [
+          "Sysmon process creation"
+        ],
+        "fields": [
+          "user",
+          "image"
+        ]
+      }
+    },
+    {
+      "id": "008",
+      "stage": "coverage",
+      "title": "Coverage on November 3rd",
+      "difficulty": "medium",
+      "prompt": "Using the 31 days from October 4th to November 3rd, what is Jen's coverage, to two decimal places?",
+      "answer": {
+        "type": "string",
+        "canonical": "0.98",
+        "accepted": [
+          "0.98",
+          ".98"
+        ]
+      },
+      "hint": "Coverage is 1 minus (singletons ÷ sightings).",
+      "evidence": {
+        "sources": [
+          "Sysmon process creation"
+        ],
+        "fields": [
+          "user",
+          "image",
+          "timestamp"
+        ]
+      }
+    },
+    {
+      "id": "009",
+      "stage": "rarity",
+      "title": "Findings",
+      "difficulty": "easy",
+      "prompt": "After the full backfill, which two users does rmm_tool_per_user flag?",
+      "answer": {
+        "type": "set",
+        "canonical": [
+          "Jen",
+          "Priya"
+        ],
+        "accepted_aliases": {
+          "Jen": [
+            "larkspur\\jen"
+          ],
+          "Priya": [
+            "larkspur\\priya"
+          ]
+        }
+      },
+      "hint": "Open the model and look at its findings.",
+      "evidence": {
+        "sources": [
+          "Sysmon process creation"
+        ],
+        "fields": [
+          "user"
+        ]
+      }
+    },
+    {
+      "id": "010",
+      "stage": "rarity",
+      "title": "Rare but quiet",
+      "difficulty": "medium",
+      "prompt": "What is John's coverage in rmm_tool_per_user, to two decimal places?",
+      "answer": {
+        "type": "string",
+        "canonical": "0.83",
+        "accepted": [
+          "0.83",
+          ".83"
+        ]
+      },
+      "hint": "Look up John's rows with modelLookup and read the coverage column.",
+      "evidence": {
+        "sources": [
+          "Sysmon process creation"
+        ],
+        "fields": [
+          "user"
+        ]
+      }
+    },
+    {
+      "id": "011",
+      "stage": "rarity",
+      "title": "Tool churn",
+      "difficulty": "medium",
+      "prompt": "How many singletons does John have in rmm_tool_per_user?",
+      "answer": {
+        "type": "string",
+        "canonical": "10",
+        "accepted": [
+          "10",
+          "ten"
+        ]
+      },
+      "hint": "A singleton is a tool with one sighting. Count John's rows where model_count is 1.",
+      "evidence": {
+        "sources": [
+          "Sysmon process creation"
+        ],
+        "fields": [
+          "user"
+        ]
+      }
+    },
+    {
+      "id": "012",
+      "stage": "checks",
+      "title": "Enough history",
+      "difficulty": "medium",
+      "prompt": "How many users have more than 10 active days in rmm_tool_per_user?",
+      "answer": {
+        "type": "string",
+        "canonical": "5",
+        "accepted": [
+          "5",
+          "five"
+        ]
+      },
+      "hint": "Active days is model_total. With a 10% rarity threshold, a group needs more than 10.",
+      "evidence": {
+        "sources": [
+          "Sysmon process creation"
+        ],
+        "fields": [
+          "user"
+        ]
+      }
+    },
+    {
+      "id": "013",
+      "stage": "checks",
+      "title": "Too new to be rare",
+      "difficulty": "easy",
+      "prompt": "How many active days does Sam have in rmm_tool_per_user?",
+      "answer": {
+        "type": "string",
+        "canonical": "6",
+        "accepted": [
+          "6",
+          "six"
+        ]
+      },
+      "hint": "Read model_total on any of Sam's rows.",
+      "evidence": {
+        "sources": [
+          "Sysmon process creation"
+        ],
+        "fields": [
+          "user"
+        ]
+      }
+    },
+    {
+      "id": "014",
+      "stage": "bad-model",
+      "title": "The bad model",
+      "difficulty": "medium",
+      "prompt": "What is the highest coverage of any user in commandline_per_user, to two decimal places?",
+      "answer": {
+        "type": "string",
+        "canonical": "0.52",
+        "accepted": [
+          "0.52",
+          ".52"
+        ]
+      },
+      "hint": "Open the model and sort by coverage.",
+      "evidence": {
+        "sources": [
+          "Sysmon process creation"
+        ],
+        "fields": [
+          "user",
+          "commandline"
+        ]
+      }
+    }
+  ],
+  "chapters": {
+    "choose": "walkthrough/01-choose.md",
+    "count": "walkthrough/02-count-days.md",
+    "first-seen": "walkthrough/03-first-seen.md",
+    "coverage": "walkthrough/04-coverage-rarity.md",
+    "rarity": "walkthrough/04-coverage-rarity.md",
+    "checks": "walkthrough/05-check-model.md",
+    "bad-model": "walkthrough/05-check-model.md"
+  }
+}

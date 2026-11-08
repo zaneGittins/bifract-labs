@@ -97,6 +97,18 @@ nav:
       - 8. Infrastructure and scope: 001/walkthrough/08-infrastructure.md
       - 9. Timeline and takeaways: 001/walkthrough/09-summary.md
     - Field reference: 001/fields.md
+  - "Lab 002: Larkspur":
+    - Overview: 002/index.md
+    - Setup: 002/setup.md
+    - Questions: 002/questions.md
+    - Walkthrough:
+      - 002/walkthrough/index.md
+      - 1. Choose what to count: 002/walkthrough/01-choose.md
+      - 2. Count days, not events: 002/walkthrough/02-count-days.md
+      - 3. First seen: 002/walkthrough/03-first-seen.md
+      - 4. Coverage and rarity: 002/walkthrough/04-coverage-rarity.md
+      - 5. Check the model: 002/walkthrough/05-check-model.md
+      - 6. Takeaways: 002/walkthrough/06-takeaways.md
 
 extra:
   generator: false

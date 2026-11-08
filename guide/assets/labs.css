@@ -125,6 +125,9 @@ body { background: var(--lb-bg); }
 .md-nav__link--active, .md-nav__item .md-nav__link--active { color: var(--lb-accent); font-weight: 600; }
 .md-nav__title { color: var(--lb-dim); }
 .md-sidebar--primary .md-nav__item--section > .md-nav__link { color: var(--lb-strong); font-weight: 650; }
+/* Inside a lab, show its section and the Home link for switching labs. */
+.md-nav--primary > .md-nav__list:has(> .md-nav__item--section.md-nav__item--active)
+  > .md-nav__item--section:not(.md-nav__item--active) { display: none; }
 
 /* Tables */
 .md-typeset table:not([class]) {
@@ -266,6 +269,20 @@ body { background: var(--lb-bg); }
 .md-typeset .lb-home { max-width: 46rem; margin: 1rem auto 0; }
 .md-typeset .lb-home > p { color: var(--lb-muted); }
 .md-typeset .lb-home h2 { margin-top: 2.4rem; }
+.md-typeset .lb-home .lb-lab-heading {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-bottom: 1rem;
+  font: 600 1rem/1.4 var(--md-code-font-family);
+  color: var(--lb-accent);
+}
+.md-typeset .lb-lab-heading::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--lb-accent-line);
+}
 /* Hero: a dark band in both themes, with the Bifract mark drawn large */
 .md-typeset .lb-band {
   --band-bg: #1b1238;
@@ -627,3 +644,57 @@ body { background: var(--lb-bg); }
 .lb-beacon svg g:hover .mark { stroke-width: 3.5; }
 @media (max-width: 44.9em) { .lb-beacon svg .mark { stroke-width: 1.25; } }
 .md-typeset .lb-beacon-axis { display: flex; justify-content: space-between; font: 0.62rem var(--md-code-font-family); color: var(--lb-dim); }
+
+/* Lab 002 baseline figures (labs/002/figures, built by figures_002.py) */
+.md-typeset .lb-viz { display: grid; gap: 0.9rem; }
+.md-typeset .lb-viz-row { display: grid; gap: 0.3rem; }
+.md-typeset .lb-viz-row.tight { gap: 0.2rem; }
+.md-typeset .lb-viz-label { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0 1rem; align-items: baseline; }
+.md-typeset .lb-viz-label b { font: 600 0.72rem var(--md-code-font-family); color: var(--lb-strong); }
+.md-typeset .lb-viz-label span { font-size: 0.66rem; color: var(--lb-muted); }
+.md-typeset .lb-viz-label em { font-style: normal; font-weight: 600; color: var(--lb-text); }
+.md-typeset .lb-viz-label em.alert { color: var(--lb-alert); }
+.md-typeset .lb-viz svg { display: block; width: 100%; height: auto; overflow: visible; }
+.md-typeset .lb-viz .lb-bar { height: 0.45rem; }
+.lb-viz .t1 { fill: var(--lb-accent); stroke: var(--lb-accent); }
+.lb-viz .alert { fill: var(--lb-alert); stroke: var(--lb-alert); }
+.lb-viz .dim { fill: var(--lb-dim); }
+.lb-viz .track { fill: var(--lb-bg-2); stroke: none; }
+.lb-viz .fill { stroke: none; }
+.lb-viz .gate { stroke: var(--lb-strong); stroke-width: 2; vector-effect: non-scaling-stroke; stroke-dasharray: 3 2; }
+.md-typeset .lb-meter-axis { position: relative; display: flex; justify-content: space-between; margin-top: 0.2rem; font: 0.62rem var(--md-code-font-family); color: var(--lb-dim); }
+.md-typeset .lb-meter-axis .g { position: absolute; top: 0; transform: translateX(-100%); padding-right: 0.35rem; color: var(--lb-text); white-space: nowrap; }
+.md-typeset .lb-viz svg.lb-hist { height: 0.7rem; }
+.md-typeset .lb-viz-legend { display: flex; flex-wrap: wrap; gap: 0.3rem 1.2rem; font-size: 0.64rem; color: var(--lb-muted); }
+.md-typeset .lb-viz-legend span { display: inline-flex; align-items: center; gap: 0.35rem; }
+.md-typeset .lb-viz-legend i { display: inline-block; width: 0.6rem; height: 0.6rem; border-radius: 2px; }
+.md-typeset .lb-viz-legend i.sw.t1 { background: var(--lb-accent); }
+.md-typeset .lb-viz-legend i.sw.dim { background: var(--lb-dim); }
+.md-typeset .lb-viz svg.lb-stack { height: 0.8rem; }
+.md-typeset .lb-viz-legend i.sw.alert { background: var(--lb-alert); }
+.md-typeset ol.lb-steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.35rem; counter-reset: s; }
+.md-typeset ol.lb-steps > li { counter-increment: s; display: grid; grid-template-columns: 1.4rem 1fr auto; grid-template-rows: auto auto; column-gap: 0.6rem; align-items: baseline; margin: 0; padding: 0.4rem 0.6rem; border: 1px solid var(--lb-border-soft); border-radius: var(--lb-radius); background: var(--lb-bg); }
+.md-typeset .lb-steps li::before { content: counter(s); grid-row: 1 / 3; align-self: center; font: 600 0.7rem var(--md-code-font-family); color: var(--lb-accent); }
+.md-typeset .lb-steps b { font-size: 0.72rem; color: var(--lb-strong); }
+.md-typeset .lb-steps span { grid-column: 2; font-size: 0.64rem; color: var(--lb-muted); }
+.md-typeset .lb-steps code { grid-column: 3; grid-row: 1 / 3; align-self: center; font-size: 0.72rem; background: none; padding: 0; color: var(--lb-text); }
+.md-typeset .lb-steps li.hot { border-color: var(--lb-accent-line); background: var(--lb-accent-soft); }
+.md-typeset .lb-steps li.hot code { color: var(--lb-accent); font-weight: 700; }
+.md-typeset .lb-panels { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+@media (max-width: 44.9em) { .md-typeset .lb-panels { grid-template-columns: 1fr; } }
+.md-typeset .lb-panel { display: grid; gap: 0.55rem; align-content: start; padding: 0.7rem 0.8rem; border: 1px solid var(--lb-border-soft); border-radius: var(--lb-radius); background: var(--lb-bg); }
+.md-typeset .lb-panel.is-hot { border-color: var(--lb-alert); box-shadow: inset 3px 0 0 var(--lb-alert); }
+.md-typeset .lb-panel-head { display: flex; justify-content: space-between; align-items: baseline; gap: 0.6rem; flex-wrap: wrap; }
+.md-typeset .lb-panel-head b { font: 600 0.8rem var(--md-code-font-family); color: var(--lb-strong); }
+.md-typeset .lb-panel-head .verdict { font-size: 0.64rem; color: var(--lb-muted); }
+.md-typeset .lb-panel.is-hot .lb-panel-head .verdict { color: var(--lb-alert); font-weight: 600; }
+.md-typeset .lb-nums { display: grid; grid-template-columns: 1fr; gap: 0.2rem; margin: 0.2rem 0 0; }
+.md-typeset .lb-nums div { display: flex; justify-content: space-between; gap: 0.5rem; }
+.md-typeset .lb-nums dt { font-size: 0.64rem; color: var(--lb-muted); }
+.md-typeset .lb-nums dd { margin: 0; font: 600 0.66rem var(--md-code-font-family); color: var(--lb-text); }
+.md-typeset .lb-viz--flip .lb-bar { height: 0.7rem; }
+@media (max-width: 44.9em) {
+  .md-typeset ol.lb-steps > li { grid-template-columns: 1.4rem 1fr; grid-template-rows: auto auto auto; }
+  .md-typeset .lb-steps li::before { grid-row: 1 / 4; }
+  .md-typeset .lb-steps code { grid-column: 2; grid-row: 3; margin-top: 0.2rem; }
+}

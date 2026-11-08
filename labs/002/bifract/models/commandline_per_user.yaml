@@ -1,0 +1,17 @@
+name: commandline_per_user
+description: >-
+  Days each user ran each exact command line. A deliberately bad baseline: browser,
+  Teams and installer command lines carry per-launch handles, versions and temp paths,
+  so most values are seen once. Use it to see what the three checks say about a model
+  you shouldn't turn on.
+model_type: rarity
+definition:
+  partition_key: user
+  value_key: commandline
+  min_sample: 1
+  alert:
+    severity: low
+    coverage_threshold: 0.9
+    percent_threshold: 10
+  source_bql: |-
+    bifract_category="process_creation" user!=~"NT AUTHORITY"

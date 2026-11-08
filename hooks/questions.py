@@ -22,6 +22,13 @@ STAGES = {
     "lateral-movement": "Lateral movement",
     "infrastructure": "Infrastructure",
     "scope": "Scope",
+    "choose": "Choose",
+    "count": "Count",
+    "first-seen": "First seen",
+    "coverage": "Coverage",
+    "rarity": "Rarity",
+    "checks": "Three checks",
+    "bad-model": "A bad model",
 }
 
 # Walkthrough chapter that answers each stage.
@@ -85,7 +92,8 @@ def render(data, defaults_case_sensitive=False):
         payload = dict(ans)
         payload.setdefault("case_sensitive", data.get("answer_defaults", {}).get("case_sensitive", defaults_case_sensitive))
         attr = html.escape(json.dumps(payload), quote=True)
-        chapter = CHAPTERS.get(q["stage"])
+        # Labs can map stages to chapters or use one page for the whole walkthrough.
+        chapter = data.get("chapters", {}).get(q["stage"]) or data.get("chapter") or CHAPTERS.get(q["stage"])
         walk = f"[Walkthrough]({chapter}#q{q['id']})" if chapter else ""
         sources = ", ".join(q.get("evidence", {}).get("sources", []))
         out.append(
