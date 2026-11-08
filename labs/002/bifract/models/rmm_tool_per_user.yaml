@@ -1,0 +1,19 @@
+name: rmm_tool_per_user
+description: >-
+  Days each user ran each remote access tool on the LOLRMM list. The tool name comes from
+  the list, so ScreenConnect.ClientSetup (1).exe and ScreenConnect.WindowsBackstageShell.exe
+  both count as ScreenConnect. Accounts under NT AUTHORITY are excluded because names
+  such as NT AUTHORITY\SYSTEM are shared across hosts. Domain service accounts can still
+  pass this filter. Needs the LOLRMM lookup from the Exchange.
+model_type: rarity
+definition:
+  partition_key: user
+  value_key: Name
+  min_sample: 1
+  alert:
+    severity: medium
+    coverage_threshold: 0.9
+    percent_threshold: 10
+  source_bql: |-
+    bifract_category="process_creation" user!=~"NT AUTHORITY"
+    | match(dict=lolrmm, field=image, column=InstallationPaths, include=[Name], require=true)

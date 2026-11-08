@@ -18,13 +18,11 @@ Labs for [Bifract](https://github.com/zaneGittins/bifract). Each lab is a datase
 
 </div>
 
-## Labs
+## Lab 001 { .lb-lab-heading }
 
 <div class="lb-lab" markdown>
 ![](assets/art/lab-001-cover.webp){ .lb-cover .no-zoom width="1600" height="640" }
 <div markdown>
-<p class="lb-kicker">Lab 001</p>
-
 ### [Meridian workstation intrusion](001/index.md)
 
 A user pastes a command they were told to run, and an attacker takes it from there.
@@ -33,6 +31,22 @@ A user pastes a command they were told to run, and an attacker takes it from the
 </div>
 <div class="lb-cta" markdown>
 [Open lab](001/index.md){ .md-button .md-button--primary }
+</div>
+</div>
+
+## Lab 002 { .lb-lab-heading }
+
+<div class="lb-lab" markdown>
+![](assets/art/lab-002-cover.webp){ .lb-cover .no-zoom width="1600" height="640" }
+<div markdown>
+### [Larkspur baselines](002/index.md)
+
+A month of ordinary workstation activity, for practicing first seen, rarity and coverage.
+
+<p class="lb-facts">Sysmon process creation · 204K events · 34 hosts · 15 questions</p>
+</div>
+<div class="lb-cta" markdown>
+[Open lab](002/index.md){ .md-button .md-button--primary }
 </div>
 </div>
 

@@ -5,6 +5,7 @@
   // Each lab's data window, so deep links land on the dataset, not "last 24h".
   var LABS = {
     "001": { from: "2026-10-27T00:00:00Z", to: "2026-11-01T00:00:00Z", fractal: "bifract-labs-001" },
+    "002": { from: "2026-10-04T00:00:00Z", to: "2026-11-05T00:00:00Z", fractal: "bifract-labs-002", progressVersion: 2 },
   };
   var KEY_URL = "bifract-labs.url";
   var KEY_FRACTAL = "bifract-labs.fractal.";
@@ -144,7 +145,11 @@
     return false;
   }
 
-  function progressKey(lab) { return "bifract-labs.solved." + lab; }
+  // Keep saved answers separate when a lab's questions are renumbered.
+  function progressKey(lab) {
+    var version = LABS[lab] && LABS[lab].progressVersion;
+    return "bifract-labs.solved." + lab + (version ? ".v" + version : "");
+  }
 
   function loadSolved(lab) {
     try { return JSON.parse(store(progressKey(lab)) || "{}") || {}; } catch (e) { return {}; }
