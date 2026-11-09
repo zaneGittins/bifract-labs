@@ -1,6 +1,6 @@
 # Lab 002: Larkspur baselines
 
-Practice first seen, rarity and coverage on a month of synthetic events generated from a fixed seed.
+Practice first seen, rarity and coverage on a month of synthetic events.
 
 **Setup, the walkthrough and the questions are at [labs.bifract.io/002](https://labs.bifract.io/002/).**
 
