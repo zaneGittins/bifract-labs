@@ -29,7 +29,7 @@ Each singleton was new once and never repeated. Their rate estimates how many ne
 - **N₁:** singletons, summed across all groups.
 - **T:** total days in the baseline, whether or not anything was seen.
 
-In this lab, 19 ÷ 32 ≈ 0.6 a day, about four a week. Ten are John's tools and seven are single Quick Assist sightings by other users. Compare the rate with the time available to investigate. It's a rough guide, not an alert forecast.
+In this lab, 19 ÷ 32 ≈ 0.6 a day, about four a week. Ten are John's tools and seven are single Quick Assist sightings by other users. Compare the rate with the time available to investigate. It's a rough guide.
 
 ### 3. Can rarity flag anything?
 
@@ -59,7 +59,7 @@ bifract_category="process_creation" user!=~"NT AUTHORITY" image=$"\\msedge.exe"
 ```
 <!-- shot: cmdline-edge | Edge executions and distinct command lines per user: nearly every execution is new. | rows=8 -->
 
-Jen's 861 Edge executions have 798 distinct command lines. Across users, about 36,000 of the model's 38,000 pairs are singletons.
+Jen's 861 Edge executions have 798 distinct command lines. Across users, about 37,000 of the model's 38,000 pairs are singletons.
 
 No user's coverage exceeds 0.52, so **Findings** is empty. The coverage threshold suppressed the results, which says nothing about whether the activity is benign. Values that repeat, such as normalized program names or parent and child process pairs, work better.
 

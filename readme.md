@@ -9,7 +9,7 @@ Labs for [Bifract](https://github.com/zaneGittins/bifract). Each lab is a datase
 | Lab | Scenario | Size |
 |---|---|---|
 | [001](https://labs.bifract.io/001/) | Meridian workstation intrusion. A user pastes a command they were told to run, and an attacker takes it from there. | 2.08M events, 5 hosts, 31 questions |
-| [002](https://labs.bifract.io/002/) | Larkspur baselines. A month of ordinary workstation activity, for practicing first seen, rarity and coverage. | 204K events, 34 hosts, 15 questions |
+| [002](https://labs.bifract.io/002/) | Larkspur baselines. A month of ordinary workstation activity, for practicing first seen, rarity and coverage. | 204K events, 34 hosts, 14 questions |
 
 The datasets are on [Releases](https://github.com/zaneGittins/bifract-labs/releases), not in the repo. Each lab's folder has its question set (answers included), the Bifract models its guide uses, and a README.
 
