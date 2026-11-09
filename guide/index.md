@@ -43,7 +43,7 @@ A user pastes a command they were told to run, and an attacker takes it from the
 
 A month of ordinary workstation activity, for practicing first seen, rarity and coverage.
 
-<p class="lb-facts">Sysmon process creation · 204K events · 34 hosts · 15 questions</p>
+<p class="lb-facts">Sysmon process creation · 204K events · 34 hosts · 14 questions</p>
 </div>
 <div class="lb-cta" markdown>
 [Open lab](002/index.md){ .md-button .md-button--primary }
